@@ -1,0 +1,1254 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Tipos Pokémon</title>
+  <style>
+    :root{
+      /* ===== Tema: OSCURO por defecto ===== */
+      --bg:#0b1220;
+      --card:#0f172a;
+      --border:rgba(255,255,255,.10);
+      --muted:rgba(255,255,255,.70);
+      --text:#e5e7eb;
+      --header:rgba(255,255,255,.06);
+      --shadow: 0 10px 25px rgba(0,0,0,.35);
+
+      --rowAlt: rgba(255,255,255,.03);
+      --chip: rgba(255,255,255,.06);
+      --chipBorder: rgba(255,255,255,.14);
+      --soft: rgba(255,255,255,.04);
+      --focus: #ffffff;
+      --badge-bg: #ffffff;
+      --badge-fg: #0b1220;
+      --badge-ring: rgba(0,0,0,.65);
+
+      /* Tabla */
+      --rowH: 86px;
+      --cellPad: 6px;
+      --orb: 86px;
+      --slot: 28px;
+      --center: 40px;
+      --th: 12px;
+
+      /* Calculadora */
+      --calcW: 250px;
+      --slotBtn: 56px;
+      --slotImg: 40px;
+      --palBtn: 38px;
+      --palImg: 28px;
+
+      /* Calculadora defensiva */
+      --miniSlot: 30px;   /* tamaño icono en reporte */
+      --miniImg: 22px;
+    }
+
+    body[data-theme="light"]{
+      --bg:#f6f7fb;
+      --card:#ffffff;
+      --border:#dbe1ee;
+      --muted:#6b7280;
+      --text:#111827;
+      --header:#eef2f7;
+      --shadow: 0 10px 25px rgba(0,0,0,.06);
+      --focus: #111827;
+      --badge-bg: #ffffff;
+      --badge-fg: #111827;
+      --badge-ring: rgba(0,0,0,.25);
+
+      --rowAlt:#fbfcff;
+      --chip:#ffffff;
+      --chipBorder: rgba(0,0,0,.12);
+      --soft: rgba(0,0,0,.04);
+    }
+
+    *{ box-sizing:border-box; }
+    body{
+      margin:0;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    .app{
+      height: 100vh;
+      padding: 10px;
+      display: grid;
+      grid-template-columns: 1fr var(--calcW);
+      gap: 10px;
+    }
+
+    .panel{
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      display:flex;
+      flex-direction:column;
+      min-height: 0;
+    }
+
+    /* LEFT: two tables side-by-side */
+    .leftGrid{
+      flex: 1 1 auto;
+      min-height: 0;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      padding: 0;
+      overflow: hidden;
+    }
+
+    .tableBox{
+      border: 1px solid var(--soft);
+      border-radius: 14px;
+      background: var(--card);
+      overflow:hidden;
+      display:flex;
+      flex-direction:column;
+      min-height: 0;
+    }
+
+    .tableWrap{
+      position: relative;
+      flex: 1 1 auto;
+      min-height: 0;
+      overflow: hidden;
+    }
+    .tableScale{
+      transform-origin: top left;
+      width: 100%;
+    }
+
+    .thead{
+      display:grid;
+      grid-template-columns: 1.1fr 1.1fr 0.9fr 1.1fr 1.1fr 0.9fr;
+      background: var(--header);
+      border-bottom: 1px solid var(--soft);
+    }
+    .th{
+      padding: 8px 4px;
+      font-weight: 900;
+      font-size: var(--th);
+      text-align:center;
+      border-right: 1px solid var(--soft);
+    }
+    .th:last-child{ border-right:0; }
+
+    .tbody{ display:flex; flex-direction:column; }
+    .row{
+      display:grid;
+      grid-template-columns: 1.1fr 1.1fr 0.9fr 1.1fr 1.1fr 0.9fr;
+      min-height: var(--rowH);
+      border-bottom: 1px solid var(--soft);
+      background: var(--card);
+    }
+    .row:nth-child(odd){ background: var(--rowAlt); }
+
+    .cell{
+      padding: var(--cellPad);
+      border-right: 1px solid var(--soft);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      position: relative;
+    }
+    .cell:last-child{ border-right:0; }
+
+    .centerIcon{
+      width: calc(var(--center) + 12px);
+      height: calc(var(--center) + 12px);
+      border-radius: 12px;
+      border: 1px solid var(--chipBorder);
+      background: var(--chip);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      overflow:hidden;
+      box-shadow: 0 4px 10px rgba(0,0,0,.20);
+    }
+    .centerIcon img{ width: var(--center); height: var(--center); object-fit: contain; }
+
+    .orbital{ width: var(--orb); height: var(--orb); position: relative; }
+    .slot{
+      position:absolute;
+      width: var(--slot);
+      height: var(--slot);
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%,-50%);
+      border-radius: 9px;
+      background: var(--chip);
+      border: 1px solid var(--chipBorder);
+      box-shadow: 0 3px 8px rgba(0,0,0,.25);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      overflow:hidden;
+    }
+    .slot img{
+      width: calc(var(--slot) - 4px);
+      height: calc(var(--slot) - 4px);
+      object-fit: contain;
+    }
+
+    /* Exclamación = inmunidad duplicada en “me hacen poco” */
+    .badge{
+      position:absolute;
+      right: 1px;
+      top: 1px;
+      width: 14px;
+      height: 14px;
+      border-radius: 999px;
+      background: var(--badge-bg);
+      border: 2px solid var(--badge-fg);
+      color: var(--badge-fg);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size: 12px;
+      font-weight: 1000;
+      line-height: 1;
+      pointer-events:none;
+    }
+
+    body:not([data-theme="light"]) .badge{
+      box-shadow:
+        0 0 0 2px var(--badge-ring),
+        0 0 10px rgba(255,255,255,.28);
+    }
+
+    .empty{
+      color: var(--muted);
+      font-size: 12px;
+      opacity:.9;
+      text-align:center;
+      padding: 10px 6px;
+      border: 1px dashed var(--chipBorder);
+      border-radius: 14px;
+      background: var(--chip);
+    }
+
+    /* RIGHT: calculator */
+    .calc{
+      flex: 1 1 auto;
+      min-height: 0;
+      overflow: hidden;
+      display:flex;
+      flex-direction:column;
+      gap: 10px;
+      padding: 10px;
+      background: linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.00));
+    }
+
+    .calcCard{
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 8px;
+      background: var(--card);
+      box-shadow: var(--shadow);
+      min-height: 0;
+      overflow: hidden;
+      display:flex;
+      flex-direction:column;
+    }
+
+    /* Ajuste: arriba “Ataque” auto, abajo “Defensa” ocupa el resto */
+    .calcCard.atkCard{ flex: 0 0 auto; }
+    .calcCard.defCard{ flex: 1 1 auto; }
+
+    .calcTitle{
+      display:flex;
+      align-items:baseline;
+      justify-content:space-between;
+      gap: 10px;
+      margin-bottom: 8px;
+      flex: 0 0 auto;
+    }
+    .calcTitle h2{
+      margin:0;
+      font-size: 13px;
+      font-weight: 1000;
+      letter-spacing:.2px;
+    }
+    .miniNote{
+      font-size: 12px;
+      color: var(--muted);
+      font-weight: 800;
+      white-space:nowrap;
+      margin-right: 65px;
+    }
+
+    .targetRow{
+      display:flex;
+      gap: 8px;
+      justify-content:space-between;
+      flex: 0 0 auto;
+    }
+    .tSlot{
+      width: 100%;
+      height: var(--slotBtn);
+      border-radius: 16px;
+      border: 1px solid var(--chipBorder);
+      background: var(--chip);
+      color: var(--text);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      cursor:pointer;
+      position:relative;
+      overflow:hidden;
+      transition: transform .06s ease, box-shadow .06s ease;
+    }
+    .tSlot:hover{
+      transform: translateY(-1px);
+      box-shadow: 0 8px 14px rgba(0,0,0,.06);
+    }
+    .tSlot.active{
+      outline: 3px solid var(--focus);
+      outline-offset: 0px;
+    }
+    .tSlot img{ width: var(--slotImg); height: var(--slotImg); object-fit:contain; }
+    .tSlot .tiny{
+      position:absolute;
+      left: 10px;
+      top: 7px;
+      font-size: 11px;
+      font-weight: 1000;
+      color: var(--text);                 /* <- en vez de muted */
+      text-shadow: 0 1px 2px rgba(0,0,0,.6); /* <- opcional pero mejora mucho */
+      padding: 2px 6px;
+      border-radius: 999px;
+      background: rgba(0,0,0,.25);
+      border: 1px solid rgba(255,255,255,.12);
+    }
+    .tSlot .fallback{
+      font-size: 12px;
+      font-weight: 1000;
+      color: var(--text);
+      padding: 0 6px;
+      text-align:center;
+      line-height:1.1;
+    }
+
+    /* Ø (ninguno) */
+    .noneMark{
+      width: 38px;
+      height: 38px;
+      border-radius: 999px;
+      border: 2px dashed rgba(17,24,39,.35);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-weight: 1000;
+      color: rgba(17,24,39,.8);
+      font-size: 16px;
+      background: rgba(249,250,251,.9);
+    }
+
+    .rowBtns{
+      display:flex;
+      gap: 6px;
+      flex-wrap:wrap;
+      margin-top: 10px;
+      flex: 0 0 auto;
+    }
+    .btnSmall{
+      height: 30px;
+      padding: 0 10px;
+      border-radius: 999px;
+      border: 1px solid var(--chipBorder);
+      background: var(--chip);
+      color: var(--text);
+      cursor:pointer;
+      font-weight: 1000;
+      font-size: 12px;
+    }
+    .btnSmall:hover{ filter: brightness(1.06); }
+    .btnSmall:hover{ background:#f8fafc; }
+
+    .out{
+      margin-top: 10px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap: 10px;
+      padding: 10px;
+      border-radius: 16px;
+      border: 1px solid var(--chipBorder);
+      background: linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
+      flex: 0 0 auto;
+    }
+
+    .desc{
+      font-size: 12px;
+      color: var(--muted);
+      font-weight: 900;
+      line-height: 1.15;
+    }
+    .mult{
+      font-weight: 1000;
+      font-size: 14px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 2px solid var(--text);
+      background: var(--chip);
+      color: var(--text);
+      white-space:nowrap;
+    }
+
+    .palette{
+      display:grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 4px;
+      margin-top: 5px;
+      flex: 1 1 auto;
+      min-height: 0;
+      overflow: hidden;
+    }
+    .pBtn{
+      height: var(--palBtn);
+      border-radius: 12px;
+      border: 1px solid var(--chipBorder);
+      background: var(--chip);
+      cursor:pointer;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      overflow:hidden;
+      padding:0;
+      transition: transform .06s ease, box-shadow .06s ease;
+    }
+    .pBtn:hover{ filter: brightness(1.06); }
+    .pBtn:hover{
+      transform: translateY(-1px);
+      box-shadow: 0 8px 14px rgba(0,0,0,.05);
+      background:#fcfdff;
+    }
+    .pBtn img{ width: var(--palImg); height: var(--palImg); object-fit:contain; }
+    .pBtn .fallback{
+      font-size: 10px;
+      font-weight: 1000;
+      color: var(--text);
+      padding: 0 4px;
+      text-align:center;
+      line-height: 1.05;
+    }
+
+    /* ====== Calculadora defensiva (abajo) ====== */
+    .defHint{
+      font-size: 12px;
+      color: var(--muted);
+      font-weight: 900;
+      line-height: 1.2;
+      padding: 8px 10px;
+      border-radius: 14px;
+      border: 1px solid var(--chipBorder);
+      background: linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
+      margin-bottom: 8px;
+      flex: 0 0 auto;
+    }
+
+    .defRows{
+      display:flex;
+      flex-direction:column;
+      gap: 8px;
+      flex: 1 1 auto;
+      min-height: 0;
+      overflow: hidden;
+    }
+
+    .defRow{
+      display:grid;
+      grid-template-columns: 52px 1fr;
+      gap: 8px;
+      align-items:center;
+      padding: 8px 10px;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      background: var(--card);
+      box-shadow: var(--shadow);
+      min-height: 0;
+    }
+
+    .mPill{
+      height: 28px;
+      border-radius: 999px;
+      border: 2px solid var(--text);
+      background: var(--chip);
+      color: var(--text);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-weight: 1000;
+      font-size: 12px;
+    }
+
+    .miniIcons{
+      display:grid;
+      grid-template-columns: repeat(4, var(--miniSlot));
+      gap: 2px;
+      align-items:center;
+      justify-content:flex-start;
+      min-height: 0;
+      overflow: hidden;
+    }
+
+    .miniSlot{
+      width: var(--miniSlot);
+      height: var(--miniSlot);
+      border-radius: 10px;
+      background: var(--chip);
+      border: 1px solid var(--chipBorder);
+      box-shadow: 0 3px 8px rgba(0,0,0,.18);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      overflow:hidden;
+      flex: 0 0 auto;
+    }
+    .miniSlot img{
+      width: var(--miniImg);
+      height: var(--miniImg);
+      object-fit:contain;
+    }
+
+    /* Tooltip */
+    .tip{
+      position: fixed;
+      z-index: 9999;
+      padding: 8px 10px;
+      font-size: 12px;
+      color: var(--text);
+      background: color-mix(in srgb, var(--card) 92%, transparent);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      pointer-events:none;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(6px);
+      display:none;
+      max-width: 260px;
+    }
+
+    .pokeSearch{
+      margin-top: 10px;
+      display:flex;
+      gap: 8px;
+      align-items:center;
+      padding: 10px;
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      background: var(--card);
+      box-shadow: var(--shadow);
+    }
+
+    .pokeSearch input{
+      flex: 1;
+      min-width: 0;
+      height: 34px;
+      border-radius: 12px;
+      border: 1px solid var(--chipBorder);
+      background: var(--chip);
+      color: var(--text);
+      padding: 0 10px;
+      font-weight: 800;
+      outline: none;
+      font-size: 13px;
+    }
+    .pokeSearch input::placeholder{ color: var(--muted); }
+
+    .pokeSearch input:focus{
+      border-color: rgba(17,24,39,.55);
+    }
+
+    .pokeSearch button{
+      height: 36px;
+      padding: 0 14px;
+      border-radius: 12px;
+      border: 2px solid var(--text);
+      background: var(--chip);
+      color: var(--text);
+      font-weight: 1000;
+      cursor:pointer;
+    }
+    .pokeSearch button:hover{ filter: brightness(1.06); }
+    .pokeSearch button:hover{ background:#f8fafc; }
+  
+    .themeToggle{
+      position: fixed;
+      top: 10px;
+      right: 10px;
+      z-index: 10000;
+      height: 34px;
+      padding: 0 12px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: var(--card);
+      color: var(--text);
+      font-weight: 1000;
+      cursor: pointer;
+      box-shadow: var(--shadow);
+    }
+    .themeToggle:hover{
+      filter: brightness(1.05);
+    }
+
+</style>
+</head>
+<body>
+  <button id="btnThemeTop" class="themeToggle" type="button">Claro</button>
+  <div class="app">
+    <!-- LEFT -->
+    <div class="panel">
+      <div class="leftGrid">
+        <div class="tableBox">
+          <div class="tableWrap" id="wrapA">
+            <div class="tableScale" id="scaleA">
+              <div class="thead">
+                <div class="th">Me hacen poco</div>
+                <div class="th">Me hacen fuerte</div>
+                <div class="th">Tipo</div>
+                <div class="th">Les hago fuerte</div>
+                <div class="th">Les hago poco</div>
+                <div class="th">x0</div>
+              </div>
+              <div class="tbody" id="tbodyA"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tableBox">
+          <div class="tableWrap" id="wrapB">
+            <div class="tableScale" id="scaleB">
+              <div class="thead">
+                <div class="th">Me hacen poco</div>
+                <div class="th">Me hacen fuerte</div>
+                <div class="th">Tipo</div>
+                <div class="th">Les hago fuerte</div>
+                <div class="th">Les hago poco</div>
+                <div class="th">x0</div>
+              </div>
+              <div class="tbody" id="tbodyB"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT -->
+    <div class="panel">
+      <div class="calc">
+        <!-- Arriba: ataque → defensa -->
+        <div class="calcCard atkCard">
+          <div class="calcTitle">
+            <h2>Calculadora</h2>
+            <div class="miniNote">1/2/3 slot</div>
+          </div>
+
+          <div class="targetRow">
+            <div class="tSlot" id="slotAtt" title="Atacante (tecla 1)"><div class="tiny">Atk</div></div>
+            <div class="tSlot" id="slotDef1" title="Defensor 1 (tecla 2)"><div class="tiny">Def1</div></div>
+            <div class="tSlot" id="slotDef2" title="Defensor 2 (tecla 3)"><div class="tiny">Def2</div></div>
+          </div>
+
+          <div class="rowBtns">
+            <button class="btnSmall" id="btnResetAll">Reset</button>
+            <button class="btnSmall" id="btnSwap">Swap</button>
+</div>
+
+          <div class="out">
+            <div class="desc" id="calcText">Ø → Ø</div>
+            <div class="mult" id="calcMult">—</div>
+          </div>
+
+          <div class="palette" id="palette"></div>
+        </div>
+
+        <!-- Abajo: análisis defensivo (x4/x2/x½/x¼/x0) -->
+        <div class="calcCard defCard">
+          <div class="calcTitle">
+            <h2>Defensa</h2>
+            <div class="miniNote">usa Def1 / Def2</div>
+          </div>
+
+          <div class="defHint" id="defHint">Selecciona Def1 y/o Def2.</div>
+
+          <div class="defRows">
+            <div class="defRow">
+              <div class="mPill">x4</div>
+              <div class="miniIcons" id="def_x4"></div>
+            </div>
+            <div class="defRow">
+              <div class="mPill">x2</div>
+              <div class="miniIcons" id="def_x2"></div>
+            </div>
+            <div class="defRow">
+              <div class="mPill">x½</div>
+              <div class="miniIcons" id="def_x05"></div>
+            </div>
+            <div class="defRow">
+              <div class="mPill">x¼</div>
+              <div class="miniIcons" id="def_x025"></div>
+            </div>
+            <div class="defRow">
+              <div class="mPill">x0</div>
+              <div class="miniIcons" id="def_x0"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="pokeSearch">
+          <input id="pokeSearchInput" type="text" placeholder="PokémonDB" autocomplete="off">
+          <button id="pokeSearchBtn" type="button">Ir</button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <div class="tip" id="tip"></div>
+
+  <script>
+    const iconBase = "./icons/";
+    const types = ["Normal","Fire","Water","Electric","Grass","Ice","Fighting","Poison","Ground","Flying","Psychic","Bug","Rock","Ghost","Dragon","Dark","Steel","Fairy"];
+
+    const left9  = ["Normal","Fire","Water","Electric","Grass","Ice","Fighting","Poison","Ground"];
+    const right9 = ["Flying","Psychic","Bug","Rock","Ghost","Dragon","Dark","Steel","Fairy"];
+
+    const esName = {
+      Normal:"Normal", Fire:"Fuego", Water:"Agua", Electric:"Eléctrico", Grass:"Planta", Ice:"Hielo",
+      Fighting:"Lucha", Poison:"Veneno", Ground:"Tierra", Flying:"Volador", Psychic:"Psíquico", Bug:"Bicho",
+      Rock:"Roca", Ghost:"Fantasma", Dragon:"Dragón", Dark:"Siniestro", Steel:"Acero", Fairy:"Hada"
+    };
+
+    const chart = {
+      Normal:  { weak:["Fighting"], resist:[], immune:["Ghost"], strong:[], notvery:["Rock","Steel"], nohit:["Ghost"] },
+      Fire:    { weak:["Water","Ground","Rock"], resist:["Fire","Grass","Ice","Bug","Steel","Fairy"], immune:[], strong:["Grass","Ice","Bug","Steel"], notvery:["Fire","Water","Rock","Dragon"], nohit:[] },
+      Water:   { weak:["Electric","Grass"], resist:["Fire","Water","Ice","Steel"], immune:[], strong:["Fire","Ground","Rock"], notvery:["Water","Grass","Dragon"], nohit:[] },
+      Electric:{ weak:["Ground"], resist:["Electric","Flying","Steel"], immune:[], strong:["Water","Flying"], notvery:["Electric","Grass","Dragon"], nohit:["Ground"] },
+      Grass:   { weak:["Fire","Ice","Poison","Flying","Bug"], resist:["Water","Electric","Grass","Ground"], immune:[], strong:["Water","Ground","Rock"], notvery:["Fire","Grass","Poison","Flying","Bug","Dragon","Steel"], nohit:[] },
+      Ice:     { weak:["Fire","Fighting","Rock","Steel"], resist:["Ice"], immune:[], strong:["Grass","Ground","Flying","Dragon"], notvery:["Fire","Water","Ice","Steel"], nohit:[] },
+      Fighting:{ weak:["Flying","Psychic","Fairy"], resist:["Bug","Rock","Dark"], immune:[], strong:["Normal","Rock","Steel","Ice","Dark"], notvery:["Flying","Poison","Bug","Psychic","Fairy"], nohit:["Ghost"] },
+      Poison:  { weak:["Ground","Psychic"], resist:["Grass","Fighting","Poison","Bug","Fairy"], immune:[], strong:["Grass","Fairy"], notvery:["Poison","Ground","Rock","Ghost"], nohit:["Steel"] },
+      Ground:  { weak:["Water","Grass","Ice"], resist:["Poison","Rock"], immune:["Electric"], strong:["Fire","Electric","Poison","Rock","Steel"], notvery:["Grass","Bug"], nohit:["Flying"] },
+      Flying:  { weak:["Electric","Ice","Rock"], resist:["Grass","Fighting","Bug"], immune:["Ground"], strong:["Grass","Fighting","Bug"], notvery:["Electric","Rock","Steel"], nohit:[] },
+      Psychic: { weak:["Bug","Ghost","Dark"], resist:["Fighting","Psychic"], immune:[], strong:["Fighting","Poison"], notvery:["Psychic","Steel"], nohit:["Dark"] },
+      Bug:     { weak:["Fire","Flying","Rock"], resist:["Grass","Fighting","Ground"], immune:[], strong:["Grass","Psychic","Dark"], notvery:["Fire","Fighting","Poison","Flying","Ghost","Steel","Fairy"], nohit:[] },
+      Rock:    { weak:["Water","Grass","Fighting","Ground","Steel"], resist:["Normal","Fire","Poison","Flying"], immune:[], strong:["Fire","Ice","Flying","Bug"], notvery:["Fighting","Ground","Steel"], nohit:[] },
+      Ghost:   { weak:["Ghost","Dark"], resist:["Poison","Bug"], immune:["Normal","Fighting"], strong:["Psychic","Ghost"], notvery:["Dark"], nohit:["Normal"] },
+      Dragon:  { weak:["Ice","Dragon","Fairy"], resist:["Fire","Water","Electric","Grass"], immune:[], strong:["Dragon"], notvery:["Steel"], nohit:["Fairy"] },
+      Dark:    { weak:["Fighting","Bug","Fairy"], resist:["Ghost","Dark"], immune:["Psychic"], strong:["Psychic","Ghost"], notvery:["Fighting","Dark","Fairy"], nohit:[] },
+      Steel:   { weak:["Fire","Fighting","Ground"], resist:["Normal","Grass","Ice","Flying","Psychic","Bug","Rock","Dragon","Steel","Fairy"], immune:["Poison"], strong:["Ice","Rock","Fairy"], notvery:["Fire","Water","Electric","Steel"], nohit:[] },
+      Fairy:   { weak:["Poison","Steel"], resist:["Fighting","Bug","Dark"], immune:["Dragon"], strong:["Fighting","Dragon","Dark"], notvery:["Fire","Poison","Steel"], nohit:[] },
+    };
+
+    const tip = document.getElementById("tip");
+    function showTip(e, text){
+      tip.style.display = "block";
+      tip.style.left = e.clientX + "px";
+      tip.style.top = e.clientY + "px";
+      tip.textContent = text;
+    }
+    function hideTip(){ tip.style.display = "none"; }
+    function iconUrl(t){ return `${iconBase}${t}.png`; }
+
+    function makeOrbital(list, { exclaimSet=null, tooltipBuilder=null } = {}){
+      const orbital = document.createElement("div");
+      orbital.className = "orbital";
+
+      const n = list.length;
+      if(n === 0){
+        const empty = document.createElement("div");
+        empty.className = "empty";
+        empty.textContent = "—";
+        orbital.appendChild(empty);
+        return orbital;
+      }
+
+      // ====== CONFIG "CLEAN" ======
+      const slotSize = parseInt(getComputedStyle(document.documentElement).getPropertyValue("--slot")) || 28;
+      const gap = -2;                       // aire extra entre iconos
+      const minNeighborDist = slotSize + gap;
+
+      const perRing = 6;
+
+      const orbSize = parseInt(getComputedStyle(document.documentElement).getPropertyValue("--orb")) || 86;
+      const maxAllowed = (orbSize / 2) - (slotSize / 2);
+      const cx = orbSize / 2;
+      const cy = orbSize / 2;
+
+      function minRadiusForRing(count){
+        if(count <= 1) return 0;
+        const denom = 2 * Math.sin(Math.PI / count);
+        return Math.ceil(minNeighborDist / denom);
+      }
+
+      const rings = [];
+      for(let i = 0; i < n; i += perRing){
+        rings.push(list.slice(i, i + perRing));
+      }
+
+      const radii = [];
+      let prevOuter = 0;
+      const ringGap = 0;
+
+      for(const ring of rings){
+        const count = ring.length;
+        let r = minRadiusForRing(count);
+
+        const minFromPrev = prevOuter + ringGap + slotSize/2;
+        if(r < minFromPrev) r = minFromPrev;
+
+        radii.push(r);
+        prevOuter = r + slotSize/2;
+      }
+
+      const maxUsed = Math.max(...radii) + slotSize/2;
+      if (maxUsed > maxAllowed) {
+        const sRaw = maxAllowed / maxUsed;
+        const minScale = 0.76; // 0.75–0.85 suele ir perfecto
+        const s = Math.max(sRaw, minScale);
+
+        orbital.style.transformOrigin = "center";
+        orbital.style.transform = `scale(${s})`;
+      }
+
+      for(let ringIndex = 0; ringIndex < rings.length; ringIndex++){
+        const ring = rings[ringIndex];
+        const count = ring.length;
+        const radius = radii[ringIndex];
+
+        for(let i=0; i<count; i++){
+          const t = ring[i];
+          const angle = (-Math.PI/2) + (2*Math.PI*i)/count;
+
+          const x = cx + radius * Math.cos(angle);
+          const y = cy + radius * Math.sin(angle);
+
+          const slot = document.createElement("div");
+          slot.className = "slot";
+          slot.style.left = x + "px";
+          slot.style.top = y + "px";
+
+          const ex = exclaimSet?.has(t) ?? false;
+          if(ex){
+            const b = document.createElement("div");
+            b.className = "badge";
+            b.textContent = "!";
+            slot.appendChild(b);
+          }
+
+          const img = document.createElement("img");
+          img.alt = esName[t] ?? t;
+          img.src = iconUrl(t);
+          img.onerror = () => {
+            slot.innerHTML =
+              `<div style="font-size:10px;font-weight:1000;line-height:1.1;text-align:center;padding:0 4px">${esName[t] ?? t}</div>` +
+              (ex ? `<div class="badge">!</div>` : "");
+          };
+          slot.appendChild(img);
+
+          const tipText = tooltipBuilder ? tooltipBuilder(t, ex) : (esName[t] ?? t);
+          slot.addEventListener("mousemove", (e)=> showTip(e, tipText));
+          slot.addEventListener("mouseleave", hideTip);
+
+          orbital.appendChild(slot);
+        }
+      }
+
+      return orbital;
+    }
+
+    function makeCell(child){
+      const c = document.createElement("div");
+      c.className = "cell";
+      c.appendChild(child);
+      return c;
+    }
+
+    function buildTable(tbodyId, defenderList){
+      const tbody = document.getElementById(tbodyId);
+      tbody.innerHTML = "";
+      for(const def of defenderList){
+        const row = document.createElement("div");
+        row.className = "row";
+
+        const resistPlus = [...chart[def].resist];
+        const immuneSet = new Set(chart[def].immune);
+        for(const im of immuneSet){
+          if(!resistPlus.includes(im)) resistPlus.push(im);
+        }
+
+        row.appendChild(makeCell(makeOrbital(resistPlus, {
+          exclaimSet: immuneSet,
+          tooltipBuilder:(atk, ex)=> ex ? `Defensa: ${esName[def]} es inmune a ${esName[atk]} (x0)` : `Defensa: ${esName[def]} resiste ${esName[atk]} (x½)`
+        })));
+
+        row.appendChild(makeCell(makeOrbital(chart[def].weak, {
+          tooltipBuilder:(atk)=> `Defensa: ${esName[def]} es débil a ${esName[atk]} (x2)`
+        })));
+
+        const cCenter = document.createElement("div");
+        cCenter.className = "cell";
+        const center = document.createElement("div");
+        center.className = "centerIcon";
+        const imgC = document.createElement("img");
+        imgC.alt = esName[def];
+        imgC.src = iconUrl(def);
+        imgC.onerror = ()=> { center.textContent = esName[def]; center.style.fontWeight="1000"; center.style.fontSize="11px"; };
+        center.appendChild(imgC);
+        cCenter.appendChild(center);
+        row.appendChild(cCenter);
+
+        row.appendChild(makeCell(makeOrbital(chart[def].strong, { tooltipBuilder:(d)=> `Ataque: ${esName[def]} es supereficaz contra ${esName[d]} (x2)` })));
+        row.appendChild(makeCell(makeOrbital(chart[def].notvery, { tooltipBuilder:(d)=> `Ataque: ${esName[def]} es poco eficaz contra ${esName[d]} (x½)` })));
+        row.appendChild(makeCell(makeOrbital(chart[def].nohit, { tooltipBuilder:(d)=> `Ataque: ${esName[def]} no afecta a ${esName[d]} (x0)` })));
+
+        tbody.appendChild(row);
+      }
+    }
+
+    // ---- Calculator (slots + Ø + shortcuts) ----
+    let attacker = "";
+    let def1 = "";
+    let def2 = "";
+    let active = "att"; // att | d1 | d2
+
+    const slotAtt = document.getElementById("slotAtt");
+    const slotDef1 = document.getElementById("slotDef1");
+    const slotDef2 = document.getElementById("slotDef2");
+    const palette = document.getElementById("palette");
+    const calcText = document.getElementById("calcText");
+    const calcMult = document.getElementById("calcMult");
+
+    // ---- Defensa report DOM ----
+    const defHint = document.getElementById("defHint");
+    const def_x4 = document.getElementById("def_x4");
+    const def_x2 = document.getElementById("def_x2");
+    const def_x05 = document.getElementById("def_x05");
+    const def_x025 = document.getElementById("def_x025");
+    const def_x0 = document.getElementById("def_x0");
+
+    function setActive(a){
+      active = a;
+      slotAtt.classList.toggle("active", active==="att");
+      slotDef1.classList.toggle("active", active==="d1");
+      slotDef2.classList.toggle("active", active==="d2");
+    }
+
+    function renderSlot(el, t, label){
+      el.innerHTML = `<div class="tiny">${label}</div>`;
+      if(!t){
+        const none = document.createElement("div");
+        none.className = "noneMark";
+        none.textContent = "Ø";
+        el.appendChild(none);
+        return;
+      }
+      const img = document.createElement("img");
+      img.alt = esName[t];
+      img.src = iconUrl(t);
+      img.onerror = ()=> {
+        const d = document.createElement("div");
+        d.className = "fallback";
+        d.textContent = esName[t];
+        el.appendChild(d);
+      };
+      el.appendChild(img);
+    }
+
+    function mult(att, def){
+      if(!att || !def) return null;
+      if(chart[def].immune.includes(att)) return 0;
+      if(chart[def].weak.includes(att)) return 2;
+      if(chart[def].resist.includes(att)) return 0.5;
+      return 1;
+    }
+    function multDual(att, d1, d2){
+      const m1 = mult(att, d1);
+      if(m1 === null) return null;
+      if(!d2) return m1;
+      const m2 = mult(att, d2);
+      if(m2 === null) return null;
+      return m1 * m2;
+    }
+    function fmt(m){
+      if(m === null) return "—";
+      if(m === 0) return "x0";
+      if(m === 0.25) return "x¼";
+      if(m === 0.5) return "x½";
+      if(m === 1) return "x1";
+      if(m === 2) return "x2";
+      if(m === 4) return "x4";
+      return "x" + m;
+    }
+
+    function clearMini(el){
+      el.innerHTML = "";
+    }
+    function addMiniIcon(el, t){
+      const s = document.createElement("div");
+      s.className = "miniSlot";
+
+      const img = document.createElement("img");
+      img.alt = esName[t] ?? t;
+      img.src = iconUrl(t);
+      img.onerror = () => {
+        s.textContent = (esName[t] ?? t).slice(0,2).toUpperCase();
+        s.style.fontWeight = "1000";
+        s.style.fontSize = "10px";
+      };
+      s.appendChild(img);
+
+      s.addEventListener("mousemove", (e)=> showTip(e, esName[t] ?? t));
+      s.addEventListener("mouseleave", hideTip);
+
+      el.appendChild(s);
+    }
+    function renderMiniGroup(el, list){
+      clearMini(el);
+      if(!list.length){
+        const d = document.createElement("div");
+        d.style.color = "var(--muted)";
+        d.style.fontSize = "12px";
+        d.style.fontWeight = "900";
+        d.textContent = "—";
+        el.appendChild(d);
+        return;
+      }
+      for(const t of list) addMiniIcon(el, t);
+    }
+
+    function renderDefenseReport(){
+      if(!def1){
+        defHint.textContent = "Selecciona Def1 y/o Def2";
+        renderMiniGroup(def_x4, []);
+        renderMiniGroup(def_x2, []);
+        renderMiniGroup(def_x05, []);
+        renderMiniGroup(def_x025, []);
+        renderMiniGroup(def_x0, []);
+        return;
+      }
+
+      const name = esName[def1] + (def2 ? (" / " + esName[def2]) : "");
+      defHint.textContent = `Defensa de ${name}:`;
+
+      const g4 = [];
+      const g2 = [];
+      const g05 = [];
+      const g025 = [];
+      const g0 = [];
+
+      for(const atk of types){
+        const m = multDual(atk, def1, def2);
+        if(m === null) continue;
+        if(m === 4) g4.push(atk);
+        else if(m === 2) g2.push(atk);
+        else if(m === 0.5) g05.push(atk);
+        else if(m === 0.25) g025.push(atk);
+        else if(m === 0) g0.push(atk);
+      }
+
+      renderMiniGroup(def_x4, g4);
+      renderMiniGroup(def_x2, g2);
+      renderMiniGroup(def_x05, g05);
+      renderMiniGroup(def_x025, g025);
+      renderMiniGroup(def_x0, g0);
+    }
+
+    function renderCalc(){
+      renderSlot(slotAtt, attacker, "Atk");
+      renderSlot(slotDef1, def1, "Def1");
+      renderSlot(slotDef2, def2, "Def2");
+
+      const m = multDual(attacker, def1, def2);
+      const left = attacker ? esName[attacker] : "Ø";
+      const right = def1 ? esName[def1] : "Ø";
+      const right2 = def2 ? (" / " + esName[def2]) : "";
+
+      if(m === null){
+        calcText.textContent = `${left} → ${right}${right2}`;
+        calcMult.textContent = "—";
+        renderDefenseReport();
+        return;
+      }
+
+      const m1 = mult(attacker, def1);
+      const explain = def2 ? `${fmt(m1)}·${fmt(mult(attacker, def2))}` : `${fmt(m1)}`;
+      calcText.textContent = `${left} → ${right}${right2} (${explain})`;
+      calcMult.textContent = fmt(m);
+
+      renderDefenseReport();
+    }
+
+    function assignType(t){
+      if(active === "att") attacker = t;
+      else if(active === "d1") def1 = t;
+      else if(active === "d2") def2 = t;
+      renderCalc();
+    }
+
+    function buildPalette(){
+      palette.innerHTML = "";
+
+      // Botón Ø en la paleta
+      const noneBtn = document.createElement("button");
+      noneBtn.className = "pBtn";
+      noneBtn.type = "button";
+      noneBtn.innerHTML = `<div class="noneMark" style="transform:scale(.85)">Ø</div>`;
+      noneBtn.addEventListener("click", ()=> assignType(""));
+      noneBtn.addEventListener("mousemove", (e)=> showTip(e, "Ninguno (Ø)"));
+      noneBtn.addEventListener("mouseleave", hideTip);
+      palette.appendChild(noneBtn);
+
+      for(const t of types){
+        const b = document.createElement("button");
+        b.className = "pBtn";
+        b.type = "button";
+
+        const img = document.createElement("img");
+        img.alt = esName[t];
+        img.src = iconUrl(t);
+        img.onerror = ()=> { b.innerHTML = `<div class="fallback">${esName[t]}</div>`; };
+        b.appendChild(img);
+
+        b.addEventListener("click", ()=> assignType(t));
+        b.addEventListener("mousemove", (e)=> showTip(e, esName[t]));
+        b.addEventListener("mouseleave", hideTip);
+
+        palette.appendChild(b);
+      }
+    }
+
+    slotAtt.addEventListener("click", ()=> setActive("att"));
+    slotDef1.addEventListener("click", ()=> setActive("d1"));
+    slotDef2.addEventListener("click", ()=> setActive("d2"));
+
+    document.getElementById("btnSwap").addEventListener("click", ()=>{
+      if(!def2) return;
+      const tmp = def1; def1 = def2; def2 = tmp;
+      renderCalc();
+    });
+
+    // ÚNICO RESET: Ø Ø Ø
+    document.getElementById("btnResetAll").addEventListener("click", ()=>{
+      attacker=""; def1=""; def2="";
+      setActive("att");
+      renderCalc();
+    });
+
+    const btnTheme = document.getElementById("btnThemeTop");
+
+    function applyTheme(theme){
+      // theme: "dark" | "light"
+      if(theme === "light"){
+        document.body.setAttribute("data-theme","light");
+        btnTheme.textContent = "Oscuro";
+      }else{
+        document.body.removeAttribute("data-theme"); // vuelve al :root (oscuro)
+        btnTheme.textContent = "Claro";
+      }
+      localStorage.setItem("pk_theme", theme);
+    }
+
+    function getTheme(){
+      return localStorage.getItem("pk_theme") || "dark";
+    }
+
+    btnTheme.addEventListener("click", ()=>{
+      const current = document.body.getAttribute("data-theme") === "light" ? "light" : "dark";
+      applyTheme(current === "light" ? "dark" : "light");
+    });
+
+    // init theme
+    applyTheme(getTheme());
+
+    // Keyboard shortcuts: 1/2/3 select slot, 0 sets Ø on active
+    window.addEventListener("keydown", (e) => {
+      if (["INPUT","TEXTAREA"].includes(document.activeElement.tagName)) return;
+
+      switch (e.key) {
+        case "1": setActive("att"); break;
+        case "2": setActive("d1"); break;
+        case "3": setActive("d2"); break;
+        case "0":
+          if (active === "att") attacker = "";
+          else if (active === "d1") def1 = "";
+          else if (active === "d2") def2 = "";
+          renderCalc();
+          break;
+      }
+    });
+
+    // ---- Fit tables ----
+    function fitOne(wrapId, scaleId){
+      const wrap = document.getElementById(wrapId);
+      const scaleEl = document.getElementById(scaleId);
+      scaleEl.style.transform = "scale(1)";
+
+      const wrapRect = wrap.getBoundingClientRect();
+      const contentW = scaleEl.scrollWidth;
+      const contentH = scaleEl.scrollHeight;
+
+      const s = Math.min(1, wrapRect.width / contentW, wrapRect.height / contentH);
+      scaleEl.style.transform = `scale(${s})`;
+      return s;
+    }
+    function fitAll(){
+      fitOne("wrapA","scaleA");
+      fitOne("wrapB","scaleB");
+    }
+
+    function toPokeDbSlug(raw){
+      return (raw ?? "")
+        .trim()
+        .toLowerCase()
+        // normaliza acentos (por si escribes “Flabébé”, etc.)
+        .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+        // caracteres especiales típicos
+        .replace(/♀/g, "-f")
+        .replace(/♂/g, "-m")
+        // cualquier cosa que no sea letra/número -> guion
+        .replace(/[^a-z0-9]+/g, "-")
+        // limpia guiones dobles o extremos
+        .replace(/-+/g, "-")
+        .replace(/^-|-$/g, "");
+    }
+
+    function goPokeDb(){
+      const input = document.getElementById("pokeSearchInput");
+      const q = input.value;
+      const slug = toPokeDbSlug(q);
+      if(!slug) return;
+
+      const url = `https://pokemondb.net/pokedex/${slug}`;
+      window.open(url, "_blank", "noopener,noreferrer");
+
+      input.value = "";     // 🧹 limpia el texto
+      input.blur();         // opcional: quita el foco (queda más “app”)
+    }
+
+    document.getElementById("pokeSearchBtn").addEventListener("click", goPokeDb);
+    document.getElementById("pokeSearchInput").addEventListener("keydown", (e)=>{
+      if(e.key === "Enter") goPokeDb();
+    });
+
+    // Init
+    buildTable("tbodyA", left9);
+    buildTable("tbodyB", right9);
+    buildPalette();
+    setActive("att");
+    attacker=""; def1=""; def2="";
+    renderCalc();
+
+    window.addEventListener("load", fitAll);
+    window.addEventListener("resize", fitAll);
+    setTimeout(fitAll, 120);
+    setTimeout(fitAll, 500);
+  </script>
+</body>
+</html>
