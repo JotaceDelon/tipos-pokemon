@@ -1,0 +1,191 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Tipos Pokémon</title>
+
+  <link rel="stylesheet" href="./css/styles.css">
+</head>
+
+<body>
+
+  <button id="btnThemeTop" class="themeToggle" type="button">Claro</button>
+
+  <div class="app">
+
+    <!-- LEFT -->
+    <div class="panel">
+      <div class="leftGrid">
+
+        <div class="tableBox">
+          <div class="tableWrap" id="wrapA">
+            <div class="tableScale" id="scaleA">
+
+              <div class="thead">
+                <div class="th">Me hacen poco</div>
+                <div class="th">Me hacen fuerte</div>
+                <div class="th">Tipo</div>
+                <div class="th">Les hago fuerte</div>
+                <div class="th">Les hago poco</div>
+                <div class="th">x0</div>
+              </div>
+
+              <div class="tbody" id="tbodyA"></div>
+
+            </div>
+          </div>
+        </div>
+
+        <div class="tableBox">
+          <div class="tableWrap" id="wrapB">
+            <div class="tableScale" id="scaleB">
+
+              <div class="thead">
+                <div class="th">Me hacen poco</div>
+                <div class="th">Me hacen fuerte</div>
+                <div class="th">Tipo</div>
+                <div class="th">Les hago fuerte</div>
+                <div class="th">Les hago poco</div>
+                <div class="th">x0</div>
+              </div>
+
+              <div class="tbody" id="tbodyB"></div>
+
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+
+    <!-- RIGHT -->
+    <div class="panel">
+      <div class="calc">
+
+        <!-- Calculadora -->
+        <div class="calcCard atkCard">
+
+          <div class="calcTitle">
+            <h2>Calculadora</h2>
+            <div class="miniNote">1/2/3 slot</div>
+          </div>
+
+          <div class="targetRow">
+
+            <div
+              class="tSlot"
+              id="slotAtt"
+              title="Atacante (tecla 1)"
+            >
+              <div class="tiny">Atk</div>
+            </div>
+
+            <div
+              class="tSlot"
+              id="slotDef1"
+              title="Defensor 1 (tecla 2)"
+            >
+              <div class="tiny">Def1</div>
+            </div>
+
+            <div
+              class="tSlot"
+              id="slotDef2"
+              title="Defensor 2 (tecla 3)"
+            >
+              <div class="tiny">Def2</div>
+            </div>
+
+          </div>
+
+          <div class="rowBtns">
+            <button class="btnSmall" id="btnResetAll">Reset</button>
+            <button class="btnSmall" id="btnSwap">Swap</button>
+          </div>
+
+          <div class="out">
+            <div class="desc" id="calcText">Ø → Ø</div>
+            <div class="mult" id="calcMult">—</div>
+          </div>
+
+          <div class="palette" id="palette"></div>
+
+        </div>
+
+
+        <!-- Defensa -->
+        <div class="calcCard defCard">
+
+          <div class="calcTitle">
+            <h2>Defensa</h2>
+            <div class="miniNote">usa Def1 / Def2</div>
+          </div>
+
+          <div class="defHint" id="defHint">
+            Selecciona Def1 y/o Def2.
+          </div>
+
+          <div class="defRows">
+
+            <div class="defRow">
+              <div class="mPill">x4</div>
+              <div class="miniIcons" id="def_x4"></div>
+            </div>
+
+            <div class="defRow">
+              <div class="mPill">x2</div>
+              <div class="miniIcons" id="def_x2"></div>
+            </div>
+
+            <div class="defRow">
+              <div class="mPill">x½</div>
+              <div class="miniIcons" id="def_x05"></div>
+            </div>
+
+            <div class="defRow">
+              <div class="mPill">x¼</div>
+              <div class="miniIcons" id="def_x025"></div>
+            </div>
+
+            <div class="defRow">
+              <div class="mPill">x0</div>
+              <div class="miniIcons" id="def_x0"></div>
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <!-- PokémonDB -->
+        <div class="pokeSearch">
+
+          <input
+            id="pokeSearchInput"
+            type="text"
+            placeholder="PokémonDB"
+            autocomplete="off"
+          >
+
+          <button id="pokeSearchBtn" type="button">
+            Ir
+          </button>
+
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+
+
+  <!-- Tooltip -->
+  <div class="tip" id="tip"></div>
+
+
+  <script src="./js/app.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,1271 @@
+:root {
+  /* ===== Tema: OSCURO por defecto ===== */
+
+  --bg: #0b1220;
+  --card: #0f172a;
+  --border: rgba(255,255,255,.10);
+  --muted: rgba(255,255,255,.70);
+  --text: #e5e7eb;
+  --header: rgba(255,255,255,.06);
+  --shadow: 0 10px 25px rgba(0,0,0,.35);
+
+  --rowAlt: rgba(255,255,255,.03);
+  --chip: rgba(255,255,255,.06);
+  --chipBorder: rgba(255,255,255,.14);
+  --soft: rgba(255,255,255,.04);
+  --focus: #ffffff;
+
+  --badge-bg: #ffffff;
+  --badge-fg: #0b1220;
+  --badge-ring: rgba(0,0,0,.65);
+
+
+  /* ===== Tabla ===== */
+
+  --rowH: 90px;
+  --cellPad: 12px;
+  --orb: 88px;
+  --slot: 34px;
+  --center: 40px;
+  --th: 12px;
+
+
+  /* ===== Calculadora ===== */
+
+  --calcW: 250px;
+  --slotBtn: 56px;
+  --slotImg: 40px;
+  --palBtn: 38px;
+  --palImg: 28px;
+
+
+  /* ===== Calculadora defensiva ===== */
+
+  --miniSlot: 30px;
+  --miniImg: 22px;
+}
+
+
+body[data-theme="light"] {
+
+  --bg: #f6f7fb;
+  --card: #ffffff;
+  --border: #dbe1ee;
+  --muted: #6b7280;
+  --text: #111827;
+  --header: #eef2f7;
+  --shadow: 0 10px 25px rgba(0,0,0,.06);
+
+  --focus: #111827;
+
+  --badge-bg: #ffffff;
+  --badge-fg: #111827;
+  --badge-ring: rgba(0,0,0,.25);
+
+  --rowAlt: #fbfcff;
+  --chip: #ffffff;
+  --chipBorder: rgba(0,0,0,.12);
+  --soft: rgba(0,0,0,.04);
+}
+
+
+/* =========================================================
+   BASE
+   ========================================================= */
+
+* {
+  box-sizing: border-box;
+}
+
+
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+
+/* =========================================================
+   APP
+   ========================================================= */
+
+.app {
+  min-height: 100vh;
+  height: auto;
+  padding: 10px;
+
+  display: grid;
+  grid-template-columns: 1fr var(--calcW);
+
+  gap: 10px;
+}
+
+
+.panel {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  box-shadow: var(--shadow);
+
+  overflow: hidden;
+
+  display: flex;
+  flex-direction: column;
+
+  min-height: 0;
+}
+
+
+/* =========================================================
+   TABLAS IZQUIERDA
+   ========================================================= */
+
+.tableBox {
+  border: 1px solid var(--soft);
+  border-radius: 14px;
+
+  background: var(--card);
+
+  overflow: hidden;
+
+  display: flex;
+  flex-direction: column;
+
+  min-height: 0;
+}
+
+
+.tableWrap {
+  position: relative;
+
+  overflow: visible;
+}
+
+
+.tableScale {
+  transform-origin: top left;
+  width: 100%;
+}
+
+
+.thead {
+  display: grid;
+
+  grid-template-columns:
+    minmax(0, 1.1fr)
+    minmax(0, 1.1fr)
+    minmax(0, 0.9fr)
+    minmax(0, 1.1fr)
+    minmax(0, 1.1fr)
+    minmax(0, 0.9fr);
+
+  background: var(--header);
+
+  border-bottom: 1px solid var(--soft);
+}
+
+
+.th {
+  padding: 8px 4px;
+
+  font-weight: 900;
+  font-size: var(--th);
+
+  text-align: center;
+
+  border-right: 1px solid var(--soft);
+}
+
+
+.th:last-child {
+  border-right: 0;
+}
+
+
+.tbody {
+  display: flex;
+  flex-direction: column;
+}
+
+
+.row {
+  display: grid;
+
+  grid-template-columns:
+    minmax(0, 1.1fr)
+    minmax(0, 1.1fr)
+    minmax(0, 0.9fr)
+    minmax(0, 1.1fr)
+    minmax(0, 1.1fr)
+    minmax(0, 0.9fr);
+
+  min-height: var(--rowH);
+
+  align-items: center;
+
+  border-bottom: 1px solid var(--soft);
+
+  background: var(--card);
+}
+
+
+.row:nth-child(odd) {
+  background: var(--rowAlt);
+}
+
+.cell {
+  padding: var(--cellPad);
+  border-right: 1px solid var(--soft);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  min-width: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden; /* Garantiza que nada se salga fuera */
+}
+
+/*
+.cell {
+  padding: var(--cellPad);
+
+  border-right: 1px solid var(--soft);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  position: relative;
+  min-width: 0;
+}
+*/
+
+.cell:last-child {
+  border-right: 0;
+}
+
+
+/* =========================================================
+   ICONO CENTRAL
+   ========================================================= */
+
+.centerIcon {
+  width: calc(var(--center) + 12px);
+  height: calc(var(--center) + 12px);
+
+  border-radius: 12px;
+
+  border: 1px solid var(--chipBorder);
+
+  background: var(--chip);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  overflow: hidden;
+
+  box-shadow: 0 4px 10px rgba(0,0,0,.20);
+}
+
+
+.centerIcon img {
+  width: var(--center);
+  height: var(--center);
+
+  object-fit: contain;
+}
+
+
+/* =========================================================
+   ÓRBITAS
+   ========================================================= */
+/*
+.orbital {
+  width: var(--orb);
+  height: var(--orb);
+
+  position: relative;
+}
+*/
+
+.orbital {
+  width: var(--orb);
+  height: var(--orb);
+  position: relative;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.orbital.orbital-grid {
+  display: flex;
+  flex-wrap: wrap;
+  align-content: center;
+  justify-content: center;
+  gap: 3px;
+  width: 100%;
+  height: 100%;
+  padding: 2px;
+}
+
+.orbital.grid-dense .slot {
+  width: calc(var(--slot) - 4px); /* 30px en escritorio */
+  height: calc(var(--slot) - 4px);
+}
+
+.orbital.grid-dense .slot img {
+  width: calc(var(--slot) - 6px);
+  height: calc(var(--slot) - 6px);
+}
+
+.slot {
+  width: var(--slot);
+  height: var(--slot);
+  border-radius: 8px;
+  background: var(--chip);
+  border: 1px solid var(--chipBorder);
+  box-shadow: 0 2px 5px rgba(0,0,0,.20);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: visible;
+  flex-shrink: 0;
+  transition: transform 0.15s ease, border-color 0.15s ease;
+}
+
+.slot.is-immune {
+  border: 2px solid #ef4444; /* Borde rojo vivo */
+  box-shadow: 0 0 6px rgba(239, 68, 68, 0.6); /* Glow sutil */
+}
+
+.orbital:not(.orbital-grid) .slot {
+  position: absolute;
+  transform: translate(-50%, -50%);
+}
+
+.slot img {
+  width: calc(var(--slot) - 2px);
+  height: calc(var(--slot) - 2px);
+  object-fit: contain;
+  border-radius: 6px;
+}
+
+
+/* =========================================================
+   BADGE DE INMUNIDAD
+   ========================================================= */
+
+.badge {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #ef4444;
+  color: #ffffff;
+  border: 1.5px solid #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 8px;
+  font-weight: 1000;
+  line-height: 1;
+  z-index: 10;
+  pointer-events: none;
+}
+
+
+body:not([data-theme="light"]) .badge {
+  box-shadow:
+    0 0 0 2px var(--badge-ring),
+    0 0 10px rgba(255,255,255,.28);
+}
+
+
+/* =========================================================
+   VACÍO
+   ========================================================= */
+
+.empty {
+  color: var(--muted);
+
+  font-size: 12px;
+
+  opacity: .9;
+
+  text-align: center;
+
+  padding: 10px 6px;
+
+  border: 1px dashed var(--chipBorder);
+
+  border-radius: 14px;
+
+  background: var(--chip);
+}
+
+
+/* =========================================================
+   CALCULADORA
+   ========================================================= */
+
+.calc {
+  flex: 1 1 auto;
+  min-height: 0;
+
+  overflow: hidden;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 10px;
+
+  padding: 10px;
+
+  background:
+    linear-gradient(
+      180deg,
+      rgba(255,255,255,.03),
+      rgba(255,255,255,.00)
+    );
+}
+
+
+.calcCard {
+  border: 1px solid var(--border);
+
+  border-radius: 16px;
+
+  padding: 8px;
+
+  background: var(--card);
+
+  box-shadow: var(--shadow);
+
+  min-height: 0;
+
+  overflow: hidden;
+
+  display: flex;
+  flex-direction: column;
+}
+
+
+.calcCard.atkCard {
+  flex: 0 0 auto;
+}
+
+
+.calcCard.defCard {
+  flex: 1 1 auto;
+}
+
+
+.calcTitle {
+  display: flex;
+
+  align-items: baseline;
+  justify-content: space-between;
+
+  gap: 10px;
+
+  margin-bottom: 8px;
+
+  flex: 0 0 auto;
+}
+
+
+.calcTitle h2 {
+  margin: 0;
+
+  font-size: 13px;
+
+  font-weight: 1000;
+
+  letter-spacing: .2px;
+}
+
+
+.miniNote {
+  font-size: 12px;
+
+  color: var(--muted);
+
+  font-weight: 800;
+
+  white-space: nowrap;
+
+  margin-right: 65px;
+}
+
+
+/* =========================================================
+   SLOTS DE CALCULADORA
+   ========================================================= */
+
+.targetRow {
+  display: flex;
+
+  gap: 8px;
+
+  justify-content: space-between;
+
+  flex: 0 0 auto;
+}
+
+
+.tSlot {
+  width: 100%;
+  height: var(--slotBtn);
+
+  border-radius: 16px;
+
+  border: 1px solid var(--chipBorder);
+
+  background: var(--chip);
+
+  color: var(--text);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  cursor: pointer;
+
+  position: relative;
+
+  overflow: hidden;
+
+  transition:
+    transform .06s ease,
+    box-shadow .06s ease;
+}
+
+
+.tSlot:hover {
+  transform: translateY(-1px);
+
+  box-shadow: 0 8px 14px rgba(0,0,0,.06);
+}
+
+
+.tSlot.active {
+  outline: 3px solid var(--focus);
+  outline-offset: 0;
+}
+
+
+.tSlot img {
+  width: var(--slotImg);
+  height: var(--slotImg);
+
+  object-fit: contain;
+}
+
+
+.tSlot .tiny {
+  position: absolute;
+
+  left: 10px;
+  top: 7px;
+
+  font-size: 11px;
+
+  font-weight: 1000;
+
+  color: var(--text);
+
+  text-shadow: 0 1px 2px rgba(0,0,0,.6);
+
+  padding: 2px 6px;
+
+  border-radius: 999px;
+
+  background: rgba(0,0,0,.25);
+
+  border: 1px solid rgba(255,255,255,.12);
+}
+
+
+.tSlot .fallback {
+  font-size: 12px;
+
+  font-weight: 1000;
+
+  color: var(--text);
+
+  padding: 0 6px;
+
+  text-align: center;
+
+  line-height: 1.1;
+}
+
+
+/* =========================================================
+   NINGUNO
+   ========================================================= */
+
+.noneMark {
+  width: 38px;
+  height: 38px;
+
+  border-radius: 999px;
+
+  border: 2px dashed rgba(17,24,39,.35);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-weight: 1000;
+
+  color: rgba(17,24,39,.8);
+
+  font-size: 16px;
+
+  background: rgba(249,250,251,.9);
+}
+
+
+/* =========================================================
+   BOTONES
+   ========================================================= */
+
+.rowBtns {
+  display: flex;
+
+  gap: 6px;
+
+  flex-wrap: wrap;
+
+  margin-top: 10px;
+
+  flex: 0 0 auto;
+}
+
+
+.btnSmall {
+  height: 30px;
+
+  padding: 0 10px;
+
+  border-radius: 999px;
+
+  border: 1px solid var(--chipBorder);
+
+  background: var(--chip);
+
+  color: var(--text);
+
+  cursor: pointer;
+
+  font-weight: 1000;
+
+  font-size: 12px;
+}
+
+
+.btnSmall:hover {
+  filter: brightness(1.06);
+  background: #f8fafc;
+}
+
+
+/* =========================================================
+   RESULTADO
+   ========================================================= */
+
+.out {
+  margin-top: 10px;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 10px;
+
+  padding: 10px;
+
+  border-radius: 16px;
+
+  border: 1px solid var(--chipBorder);
+
+  background:
+    linear-gradient(
+      180deg,
+      rgba(255,255,255,.04),
+      rgba(255,255,255,.02)
+    );
+
+  flex: 0 0 auto;
+}
+
+
+.desc {
+  font-size: 12px;
+
+  color: var(--muted);
+
+  font-weight: 900;
+
+  line-height: 1.15;
+}
+
+
+.mult {
+  font-weight: 1000;
+
+  font-size: 14px;
+
+  padding: 6px 10px;
+
+  border-radius: 999px;
+
+  border: 2px solid var(--text);
+
+  background: var(--chip);
+
+  color: var(--text);
+
+  white-space: nowrap;
+}
+
+
+/* =========================================================
+   PALETA
+   ========================================================= */
+
+.palette {
+  display: grid;
+
+  grid-template-columns: repeat(6, 1fr);
+
+  gap: 4px;
+
+  margin-top: 5px;
+
+  flex: 1 1 auto;
+
+  min-height: 0;
+
+  overflow: hidden;
+}
+
+
+.pBtn {
+  height: var(--palBtn);
+
+  border-radius: 12px;
+
+  border: 1px solid var(--chipBorder);
+
+  background: var(--chip);
+
+  cursor: pointer;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  overflow: hidden;
+
+  padding: 0;
+
+  transition:
+    transform .06s ease,
+    box-shadow .06s ease;
+}
+
+
+.pBtn:hover {
+  filter: brightness(1.06);
+
+  transform: translateY(-1px);
+
+  box-shadow: 0 8px 14px rgba(0,0,0,.05);
+
+  background: #fcfdff;
+}
+
+
+.pBtn img {
+  width: var(--palImg);
+  height: var(--palImg);
+
+  object-fit: contain;
+}
+
+
+.pBtn .fallback {
+  font-size: 10px;
+
+  font-weight: 1000;
+
+  color: var(--text);
+
+  padding: 0 4px;
+
+  text-align: center;
+
+  line-height: 1.05;
+}
+
+
+/* =========================================================
+   CALCULADORA DEFENSIVA
+   ========================================================= */
+
+.defHint {
+  font-size: 12px;
+
+  color: var(--muted);
+
+  font-weight: 900;
+
+  line-height: 1.2;
+
+  padding: 8px 10px;
+
+  border-radius: 14px;
+
+  border: 1px solid var(--chipBorder);
+
+  background:
+    linear-gradient(
+      180deg,
+      rgba(255,255,255,.04),
+      rgba(255,255,255,.02)
+    );
+
+  margin-bottom: 8px;
+
+  flex: 0 0 auto;
+}
+
+
+.defRows {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 8px;
+
+  flex: 1 1 auto;
+
+  min-height: 0;
+
+  overflow: hidden;
+}
+
+
+.defRow {
+  display: grid;
+
+  grid-template-columns: 52px 1fr;
+
+  gap: 8px;
+
+  align-items: center;
+
+  padding: 8px 10px;
+
+  border-radius: 14px;
+
+  border: 1px solid var(--border);
+
+  background: var(--card);
+
+  box-shadow: var(--shadow);
+
+  min-height: 0;
+}
+
+
+.mPill {
+  height: 28px;
+
+  border-radius: 999px;
+
+  border: 2px solid var(--text);
+
+  background: var(--chip);
+
+  color: var(--text);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-weight: 1000;
+
+  font-size: 12px;
+}
+
+
+.miniIcons {
+  display: grid;
+
+  grid-template-columns: repeat(4, var(--miniSlot));
+
+  gap: 2px;
+
+  align-items: center;
+
+  justify-content: flex-start;
+
+  min-height: 0;
+
+  overflow: hidden;
+}
+
+
+.miniSlot {
+  width: var(--miniSlot);
+  height: var(--miniSlot);
+
+  border-radius: 10px;
+
+  background: var(--chip);
+
+  border: 1px solid var(--chipBorder);
+
+  box-shadow: 0 3px 8px rgba(0,0,0,.18);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  overflow: hidden;
+
+  flex: 0 0 auto;
+}
+
+
+.miniSlot img {
+  width: var(--miniImg);
+  height: var(--miniImg);
+
+  object-fit: contain;
+}
+
+
+/* =========================================================
+   TOOLTIP
+   ========================================================= */
+
+.tip {
+  position: fixed;
+
+  z-index: 9999;
+
+  padding: 8px 10px;
+
+  font-size: 12px;
+
+  color: var(--text);
+
+  background:
+    color-mix(
+      in srgb,
+      var(--card) 92%,
+      transparent
+    );
+
+  border: 1px solid var(--border);
+
+  border-radius: 12px;
+
+  pointer-events: none;
+
+  box-shadow: var(--shadow);
+
+  backdrop-filter: blur(6px);
+
+  display: none;
+
+  max-width: 260px;
+}
+
+
+/* =========================================================
+   BÚSQUEDA POKÉMONDB
+   ========================================================= */
+
+.pokeSearch {
+  margin-top: 10px;
+
+  display: flex;
+
+  gap: 8px;
+
+  align-items: center;
+
+  padding: 10px;
+
+  border-radius: 16px;
+
+  border: 1px solid var(--border);
+
+  background: var(--card);
+
+  box-shadow: var(--shadow);
+}
+
+
+.pokeSearch input {
+  flex: 1;
+
+  min-width: 0;
+
+  height: 34px;
+
+  border-radius: 12px;
+
+  border: 1px solid var(--chipBorder);
+
+  background: var(--chip);
+
+  color: var(--text);
+
+  padding: 0 10px;
+
+  font-weight: 800;
+
+  outline: none;
+
+  font-size: 13px;
+}
+
+
+.pokeSearch input::placeholder {
+  color: var(--muted);
+}
+
+
+.pokeSearch input:focus {
+  border-color: rgba(17,24,39,.55);
+}
+
+
+.pokeSearch button {
+  height: 36px;
+
+  padding: 0 14px;
+
+  border-radius: 12px;
+
+  border: 2px solid var(--text);
+
+  background: var(--chip);
+
+  color: var(--text);
+
+  font-weight: 1000;
+
+  cursor: pointer;
+}
+
+
+.pokeSearch button:hover {
+  filter: brightness(1.06);
+  background: #f8fafc;
+}
+
+
+/* =========================================================
+   CAMBIO DE TEMA
+   ========================================================= */
+
+.themeToggle {
+  position: fixed;
+
+  top: 10px;
+  right: 10px;
+
+  z-index: 10000;
+
+  height: 34px;
+
+  padding: 0 12px;
+
+  border-radius: 12px;
+
+  border: 1px solid var(--border);
+
+  background: var(--card);
+
+  color: var(--text);
+
+  font-weight: 1000;
+
+  cursor: pointer;
+
+  box-shadow: var(--shadow);
+}
+
+
+.themeToggle:hover {
+  filter: brightness(1.05);
+}
+
+/* Contenedor principal que envuelve a ambas tablas */
+.tables-wrapper, 
+.tables-container { /* Usa la clase de tu contenedor principal de tablas */
+  display: flex;
+  flex-direction: row;
+  align-items: stretch; /* Obliga a ambas columnas a tener la misma altura */
+  gap: 20px;
+  width: 100%;
+}
+
+/* Cada una de las dos tablas/columnas */
+.table-card, 
+.calculator-section {
+  flex: 1; /* Ocupan exactamente el 50% cada una */
+  display: flex;
+  flex-direction: column;
+  min-width: 0; /* Previene desbordamientos flex */
+}
+
+/* =========================================================
+   RESPONSIVE Y ALTURAS DE TABLAS
+   ========================================================= */
+
+/* 1. Regla global para que en escritorio las tablas tengan SIEMPRE la misma altura */
+.leftGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: stretch; /* Estira las dos tablas para que sean idénticas */
+  gap: 12px;
+}
+
+.leftGrid .panel {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+/* 2. Monitor Grande (> 1400px): Todo holgado y órbitas anchas sin solapamiento */
+@media (min-width: 1401px) {
+  :root {
+    --rowH: 88px;
+    --orb: 115px;   /* Órbita más grande para dar separación entre slots */
+    --center: 32px;
+    --slot: 36px;   /* Iconos grandes y legibles */
+  }
+
+  .app {
+    grid-template-columns: 1fr auto;
+  }
+}
+
+/* 3. La calculadora pasa abajo (Entre 1001px y 1400px):
+   Las dos tablas ocupan todo el ancho superior con iconos grandes */
+@media (max-width: 1400px) and (min-width: 1001px) {
+  :root {
+    --rowH: 84px;
+    --orb: 105px;
+    --center: 32px;
+    --slot: 36px;   /* Mantenemos iconos grandes porque las celdas se ensanchan */
+  }
+
+  .app {
+    grid-template-columns: 1fr; /* Calculadora pasa abajo */
+  }
+
+  .leftGrid {
+    grid-template-columns: 1fr 1fr; /* Las 2 tablas siguen en horizontal */
+  }
+
+  .calc {
+    width: 100%;
+  }
+}
+
+/* 4. Las 2 tablas se apilan una sobre otra (Entre 601px y 1000px):
+   1 sola columna -> Mucho espacio por celda -> Iconos MÁS GRANDES */
+@media (max-width: 1000px) {
+  .app {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    min-height: 100vh;
+    padding: 6px;
+    gap: 8px;
+  }
+
+  .leftGrid {
+    display: flex;
+    flex-direction: column; /* Tablas apiladas */
+    gap: 8px;
+  }
+
+  .panel {
+    width: 100%;
+  }
+
+  :root {
+    --rowH: 80px;
+    --orb: 100px;
+    --center: 30px;
+    --slot: 38px;   /* Iconos un pelín más grandes al tener mucho espacio */
+    --slotBtn: 52px;
+    --slotImg: 36px;
+    --palBtn: 36px;
+    --palImg: 26px;
+    --miniSlot: 28px;
+    --miniImg: 20px;
+  }
+}
+
+/* 5. Pantallas Móvil (< 600px):
+   Iconos MÁS PEQUEÑOS para que quepan todos sin desbordar */
+@media (max-width: 600px) {
+  :root {
+    --rowH: 56px;   /* Filas más finas */
+    --orb: 100%;
+    --center: 26px;
+    --slot: 21px;   /* Reducido para garantízate que quepan 8-10 tipos */
+    --cellPad: 2px;
+
+    --slotBtn: 44px;
+    --slotImg: 28px;
+    --palBtn: 32px;
+    --palImg: 22px;
+    --miniSlot: 24px;
+    --miniImg: 18px;
+  }
+
+  .app {
+    padding: 4px;
+    gap: 6px;
+  }
+
+  .panel {
+    padding: 8px;
+  }
+
+  .orbital.orbital-grid {
+    gap: 1.5px;    /* Espaciado ajustado para no romper filas */
+  }
+
+  .badge {
+    top: -4px;
+    right: -4px;
+    width: 9px;
+    height: 9px;
+    font-size: 7px;
+  }
+}
