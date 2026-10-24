@@ -10,66 +10,60 @@
 
 <body>
 
-  <button id="btnThemeTop" class="themeToggle" type="button">Claro</button>
+  <header class="pageHeader"><h1>Tipos Pokémon</h1><button id="btnThemeTop" class="themeToggle" type="button">Claro</button></header>
 
   <div class="app">
 
     <!-- LEFT -->
+    <section class="reference" aria-label="Tabla de tipos">
     <div class="panel">
       <div class="leftGrid">
 
         <div class="tableBox">
-          <div class="tableWrap" id="wrapA">
-            <div class="tableScale" id="scaleA">
 
-              <div class="thead">
-                <div class="th">Me hacen poco</div>
-                <div class="th">Me hacen fuerte</div>
-                <div class="th">Tipo</div>
-                <div class="th">Les hago fuerte</div>
-                <div class="th">Les hago poco</div>
-                <div class="th">x0</div>
-              </div>
-
-              <div class="tbody" id="tbodyA"></div>
-
-            </div>
+          <div class="thead">
+            <div class="th">Resiste ½ / 0</div>
+            <div class="th">Recibe ×2</div>
+            <div class="th">Tipo</div>
+            <div class="th">Ataca ×2</div>
+            <div class="th">Ataca ×½</div>
+            <div class="th">x0</div>
           </div>
+
+          <div class="tbody" id="tbodyA"></div>
+
         </div>
 
         <div class="tableBox">
-          <div class="tableWrap" id="wrapB">
-            <div class="tableScale" id="scaleB">
 
-              <div class="thead">
-                <div class="th">Me hacen poco</div>
-                <div class="th">Me hacen fuerte</div>
-                <div class="th">Tipo</div>
-                <div class="th">Les hago fuerte</div>
-                <div class="th">Les hago poco</div>
-                <div class="th">x0</div>
-              </div>
-
-              <div class="tbody" id="tbodyB"></div>
-
-            </div>
+          <div class="thead">
+            <div class="th">Resiste ½ / 0</div>
+            <div class="th">Recibe ×2</div>
+            <div class="th">Tipo</div>
+            <div class="th">Ataca ×2</div>
+            <div class="th">Ataca ×½</div>
+            <div class="th">x0</div>
           </div>
+
+          <div class="tbody" id="tbodyB"></div>
+
         </div>
 
       </div>
     </div>
 
 
+    </section>
     <!-- RIGHT -->
     <div class="panel">
       <div class="calc">
 
         <!-- Calculadora -->
-        <div class="calcCard atkCard">
+        <div class="calcCard">
 
           <div class="calcTitle">
             <h2>Calculadora</h2>
-            <div class="miniNote">1/2/3 slot</div>
+            <div class="miniNote">Teclas 1 / 2 / 3</div>
           </div>
 
           <div class="targetRow">
@@ -101,12 +95,12 @@
           </div>
 
           <div class="rowBtns">
-            <button class="btnSmall" id="btnResetAll">Reset</button>
-            <button class="btnSmall" id="btnSwap">Swap</button>
+            <button class="btnSmall" id="btnResetAll">Limpiar</button>
+            <button class="btnSmall" id="btnSwap">Intercambiar defensas</button>
           </div>
 
           <div class="out">
-            <div class="desc" id="calcText">Ø → Ø</div>
+            <div class="desc" aria-live="polite" id="calcText">Ø → Ø</div>
             <div class="mult" id="calcMult">—</div>
           </div>
 
@@ -165,7 +159,8 @@
           <input
             id="pokeSearchInput"
             type="text"
-            placeholder="PokémonDB"
+            aria-label="Buscar Pokémon en PokémonDB"
+            placeholder="Buscar en PokémonDB…"
             autocomplete="off"
           >
 

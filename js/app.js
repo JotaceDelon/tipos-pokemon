@@ -21,30 +21,8 @@ const types = [
   "Fairy"
 ];
 
-const left9 = [
-  "Normal",
-  "Fire",
-  "Water",
-  "Electric",
-  "Grass",
-  "Ice",
-  "Fighting",
-  "Poison",
-  "Ground"
-];
-
-const right9 = [
-  "Flying",
-  "Psychic",
-  "Bug",
-  "Rock",
-  "Ghost",
-  "Dragon",
-  "Dark",
-  "Steel",
-  "Fairy"
-];
-
+const left9 = types.slice(0, 9);
+const right9 = types.slice(9);
 
 const esName = {
   Normal: "Normal",
@@ -66,7 +44,6 @@ const esName = {
   Steel: "Acero",
   Fairy: "Hada"
 };
-
 
 const chart = {
 
@@ -245,13 +222,11 @@ const chart = {
 
 };
 
-
 /* =========================================================
    TOOLTIP
    ========================================================= */
 
 const tip = document.getElementById("tip");
-
 
 function showTip(e, text) {
   tip.style.display = "block";
@@ -260,245 +235,43 @@ function showTip(e, text) {
   tip.textContent = text;
 }
 
-
 function hideTip() {
   tip.style.display = "none";
 }
-
 
 function iconUrl(t) {
   return `${iconBase}${t}.png`;
 }
 
-
 /* =========================================================
-   ÓRBITAS
+   GRUPOS DE TIPOS
    ========================================================= */
-/*
-function makeOrbital(
-  list,
-  {
-    exclaimSet = null,
-    tooltipBuilder = null
-  } = {}
-) {
-  const orbital = document.createElement("div");
-  orbital.className = "orbital";
-
-  const n = list.length;
-
-  if (n === 0) {
-    const empty = document.createElement("div");
-    empty.className = "empty";
-    empty.textContent = "—";
-    orbital.appendChild(empty);
-    return orbital;
+function makeTypeGroup(list, { immunitySet = null, tooltipBuilder = null } = {}) {
+  const group = document.createElement("div");
+  group.className = "typeGroup";
+  if (!list.length) {
+    group.innerHTML = '<span class="empty">—</span>';
+    return group;
   }
-
-  // Detectar si la pantalla es de tamaño móvil
-  const isMobile = window.innerWidth <= 600;
-
-  // Si hay más de 5 elementos o estamos en móvil, usamos la vista Cuadrícula/Grid
-  const useGrid = n > 5 || isMobile;
-
-  if (useGrid) {
-    orbital.classList.add("orbital-grid");
-
-    // Ajustar columnas dinámicamente según la cantidad de elementos
-    if (n > 8) {
-      orbital.classList.add("grid-dense");
+  for (const t of list) {
+    const immune = immunitySet?.has(t) ?? false;
+    const item = document.createElement("span");
+    item.className = "slot" + (immune ? " is-immune" : "");
+    item.title = tooltipBuilder ? tooltipBuilder(t, immune) : esName[t];
+    const img = document.createElement("img");
+    img.src = iconUrl(t);
+    img.alt = esName[t];
+    item.appendChild(img);
+    if (immune) {
+      const badge = document.createElement("span");
+      badge.className = "badge";
+      badge.textContent = "0";
+      item.appendChild(badge);
     }
-
-    for (let i = 0; i < n; i++) {
-      const t = list[i];
-      const slot = createSlotElement(t, exclaimSet, tooltipBuilder);
-      orbital.appendChild(slot);
-    }
-
-    return orbital;
+    group.appendChild(item);
   }
-
-  // --- MODO ÓRBITA TRADICIONAL (1 a 5 elementos en pantalla grande) ---
-  const baseSlotSize = parseInt(getComputedStyle(document.documentElement).getPropertyValue("--slot")) || 28;
-  const orbSize = parseInt(getComputedStyle(document.documentElement).getPropertyValue("--orb")) || 80;
-
-  const cx = orbSize / 2;
-  const cy = orbSize / 2;
-
-  const rx = (orbSize / 2) - (baseSlotSize / 2) - 2;
-  const ry = rx * 0.75; // Elipse suave
-
-  for (let i = 0; i < n; i++) {
-    const t = list[i];
-
-    // Calcular coordenadas
-    const angle = (2 * Math.PI * i) / n - (Math.PI / 2);
-    const x = cx + rx * Math.cos(angle);
-    const y = cy + ry * Math.sin(angle);
-
-    const slot = createSlotElement(t, exclaimSet, tooltipBuilder);
-    slot.style.position = "absolute";
-    slot.style.left = x + "px";
-    slot.style.top = y + "px";
-
-    orbital.appendChild(slot);
-  }
-
-  return orbital;
+  return group;
 }
-
-// Función auxiliar para construir cada slot limpia y reutilizable
-function createSlotElement(t, exclaimSet, tooltipBuilder) {
-  const slot = document.createElement("div");
-  slot.className = "slot";
-
-  const ex = exclaimSet?.has(t) ?? false;
-
-  // Si es inmune, añadimos una clase especial a la casilla entera
-  if (ex) {
-    slot.classList.add("is-immune");
-  }
-
-  const img = document.createElement("img");
-  img.alt = esName[t] ?? t;
-  img.src = iconUrl(t);
-
-  img.onerror = () => {
-    slot.innerHTML =
-      `<div style="font-size:8px;font-weight:1000;line-height:1;text-align:center;padding:0 1px">${(esName[t] ?? t).slice(0, 3)}</div>`;
-  };
-
-  slot.appendChild(img);
-
-  // Añadimos la insignia fuera o con un estilo no invasivo
-  if (ex) {
-    const b = document.createElement("div");
-    b.className = "badge";
-    b.textContent = "!";
-    slot.appendChild(b);
-  }
-
-  const tipText = tooltipBuilder
-    ? tooltipBuilder(t, ex)
-    : (esName[t] ?? t);
-
-  slot.addEventListener("mousemove", (e) => showTip(e, tipText));
-  slot.addEventListener("mouseleave", hideTip);
-
-  return slot;
-}
-*/
-
-function makeOrbital(list, { exclaimSet=null, tooltipBuilder=null } = {}){
-  const orbital = document.createElement("div");
-  orbital.className = "orbital";
-
-  const n = list.length;
-  if(n === 0){
-    const empty = document.createElement("div");
-    empty.className = "empty";
-    empty.textContent = "—";
-    orbital.appendChild(empty);
-    return orbital;
-  }
-
-  // ====== CONFIG "CLEAN" ======
-  const slotSize = parseInt(getComputedStyle(document.documentElement).getPropertyValue("--slot")) || 28;
-  const gap = -2;                       // aire extra entre iconos
-  const minNeighborDist = slotSize + gap;
-
-  const perRing = 6;
-
-  const orbSize = parseInt(getComputedStyle(document.documentElement).getPropertyValue("--orb")) || 86;
-  const maxAllowed = (orbSize / 2) - (slotSize / 2);
-  const cx = orbSize / 2;
-  const cy = orbSize / 2;
-
-  function minRadiusForRing(count){
-    if(count <= 1) return 0;
-    const denom = 2 * Math.sin(Math.PI / count);
-    return Math.ceil(minNeighborDist / denom);
-  }
-
-  const rings = [];
-  for(let i = 0; i < n; i += perRing){
-    rings.push(list.slice(i, i + perRing));
-  }
-
-  const radii = [];
-  let prevOuter = 0;
-  const ringGap = 0;
-
-  for(const ring of rings){
-    const count = ring.length;
-    let r = minRadiusForRing(count);
-
-    const minFromPrev = prevOuter + ringGap + slotSize/2;
-    if(r < minFromPrev) r = minFromPrev;
-
-    radii.push(r);
-    prevOuter = r + slotSize/2;
-  }
-
-  const maxUsed = Math.max(...radii) + slotSize/2;
-  if (maxUsed > maxAllowed) {
-    const sRaw = maxAllowed / maxUsed;
-    const minScale = 0.76; // 0.75–0.85 suele ir perfecto
-    const s = Math.max(sRaw, minScale);
-
-    orbital.style.transformOrigin = "center";
-    orbital.style.transform = `scale(${s})`;
-  }
-
-  for(let ringIndex = 0; ringIndex < rings.length; ringIndex++){
-    const ring = rings[ringIndex];
-    const count = ring.length;
-    const radius = radii[ringIndex];
-
-    for(let i=0; i<count; i++){
-      const t = ring[i];
-      const angle = (-Math.PI/2) + (2*Math.PI*i)/count;
-
-      const x = cx + radius * Math.cos(angle);
-      const y = cy + radius * Math.sin(angle);
-
-      const slot = document.createElement("div");
-      slot.className = "slot";
-      slot.style.left = x + "px";
-      slot.style.top = y + "px";
-
-      const ex = exclaimSet?.has(t) ?? false;
-      if(ex){
-        const b = document.createElement("div");
-        b.className = "badge";
-        b.textContent = "!";
-        slot.appendChild(b);
-      }
-
-      const img = document.createElement("img");
-      img.alt = esName[t] ?? t;
-      img.src = iconUrl(t);
-      img.onerror = () => {
-        slot.innerHTML =
-          `<div style="font-size:10px;font-weight:1000;line-height:1.1;text-align:center;padding:0 4px">${esName[t] ?? t}</div>` +
-          (ex ? `<div class="badge">!</div>` : "");
-      };
-      slot.appendChild(img);
-
-      const tipText = tooltipBuilder ? tooltipBuilder(t, ex) : (esName[t] ?? t);
-      slot.addEventListener("mousemove", (e)=> showTip(e, tipText));
-      slot.addEventListener("mouseleave", hideTip);
-
-      orbital.appendChild(slot);
-    }
-  }
-
-  return orbital;
-}
-
-/* =========================================================
-   TABLAS
-   ========================================================= */
 
 function makeCell(child) {
 
@@ -512,14 +285,12 @@ function makeCell(child) {
   return c;
 }
 
-
 function buildTable(tbodyId, defenderList) {
 
   const tbody =
     document.getElementById(tbodyId);
 
   tbody.innerHTML = "";
-
 
   for (const def of defenderList) {
 
@@ -528,13 +299,11 @@ function buildTable(tbodyId, defenderList) {
 
     row.className = "row";
 
-
     const resistPlus =
       [...chart[def].resist];
 
     const immuneSet =
       new Set(chart[def].immune);
-
 
     for (const im of immuneSet) {
 
@@ -543,13 +312,12 @@ function buildTable(tbodyId, defenderList) {
       }
     }
 
-
     row.appendChild(
       makeCell(
-        makeOrbital(
+        makeTypeGroup(
           resistPlus,
           {
-            exclaimSet: immuneSet,
+            immunitySet: immuneSet,
 
             tooltipBuilder:
               (atk, ex) =>
@@ -561,10 +329,9 @@ function buildTable(tbodyId, defenderList) {
       )
     );
 
-
     row.appendChild(
       makeCell(
-        makeOrbital(
+        makeTypeGroup(
           chart[def].weak,
           {
             tooltipBuilder:
@@ -575,18 +342,15 @@ function buildTable(tbodyId, defenderList) {
       )
     );
 
-
     const cCenter =
       document.createElement("div");
 
     cCenter.className = "cell";
 
-
     const center =
       document.createElement("div");
 
     center.className = "centerIcon";
-
 
     const imgC =
       document.createElement("img");
@@ -596,7 +360,6 @@ function buildTable(tbodyId, defenderList) {
 
     imgC.src =
       iconUrl(def);
-
 
     imgC.onerror = () => {
 
@@ -610,17 +373,15 @@ function buildTable(tbodyId, defenderList) {
         "11px";
     };
 
-
     center.appendChild(imgC);
 
     cCenter.appendChild(center);
 
     row.appendChild(cCenter);
 
-
     row.appendChild(
       makeCell(
-        makeOrbital(
+        makeTypeGroup(
           chart[def].strong,
           {
             tooltipBuilder:
@@ -631,10 +392,9 @@ function buildTable(tbodyId, defenderList) {
       )
     );
 
-
     row.appendChild(
       makeCell(
-        makeOrbital(
+        makeTypeGroup(
           chart[def].notvery,
           {
             tooltipBuilder:
@@ -645,10 +405,9 @@ function buildTable(tbodyId, defenderList) {
       )
     );
 
-
     row.appendChild(
       makeCell(
-        makeOrbital(
+        makeTypeGroup(
           chart[def].nohit,
           {
             tooltipBuilder:
@@ -659,11 +418,15 @@ function buildTable(tbodyId, defenderList) {
       )
     );
 
-
+    const labels = ["Resiste · ×½ / ×0", "Débil a · ×2", "Tipo", "Supereficaz · ×2", "Poco eficaz · ×½", "No afecta · ×0"];
+    Array.from(row.children).forEach((cell, i) => { cell.dataset.label = labels[i]; });
+    const name = document.createElement("span");
+    name.className = "typeName";
+    name.textContent = esName[def];
+    center.appendChild(name);
     tbody.appendChild(row);
   }
 }
-
 
 /* =========================================================
    CALCULADORA
@@ -674,7 +437,6 @@ let def1 = "";
 let def2 = "";
 
 let active = "att";
-
 
 const slotAtt =
   document.getElementById("slotAtt");
@@ -693,7 +455,6 @@ const calcText =
 
 const calcMult =
   document.getElementById("calcMult");
-
 
 /* =========================================================
    DEFENSA
@@ -717,7 +478,6 @@ const def_x025 =
 const def_x0 =
   document.getElementById("def_x0");
 
-
 function setActive(a) {
 
   active = a;
@@ -738,12 +498,10 @@ function setActive(a) {
   );
 }
 
-
 function renderSlot(el, t, label) {
 
   el.innerHTML =
     `<div class="tiny">${label}</div>`;
-
 
   if (!t) {
 
@@ -759,7 +517,6 @@ function renderSlot(el, t, label) {
     return;
   }
 
-
   const img =
     document.createElement("img");
 
@@ -768,7 +525,6 @@ function renderSlot(el, t, label) {
 
   img.src =
     iconUrl(t);
-
 
   img.onerror = () => {
 
@@ -783,10 +539,8 @@ function renderSlot(el, t, label) {
     el.appendChild(d);
   };
 
-
   el.appendChild(img);
 }
-
 
 /* =========================================================
    MULTIPLICADORES
@@ -813,7 +567,6 @@ function mult(att, def) {
   return 1;
 }
 
-
 function multDual(att, d1, d2) {
 
   const m1 =
@@ -836,7 +589,6 @@ function multDual(att, d1, d2) {
 
   return m1 * m2;
 }
-
 
 function fmt(m) {
 
@@ -871,15 +623,9 @@ function fmt(m) {
   return "x" + m;
 }
 
-
 /* =========================================================
    MINI ICONOS
    ========================================================= */
-
-function clearMini(el) {
-  el.innerHTML = "";
-}
-
 
 function addMiniIcon(el, t) {
 
@@ -887,7 +633,6 @@ function addMiniIcon(el, t) {
     document.createElement("div");
 
   s.className = "miniSlot";
-
 
   const img =
     document.createElement("img");
@@ -897,7 +642,6 @@ function addMiniIcon(el, t) {
 
   img.src =
     iconUrl(t);
-
 
   img.onerror = () => {
 
@@ -913,9 +657,7 @@ function addMiniIcon(el, t) {
       "10px";
   };
 
-
   s.appendChild(img);
-
 
   s.addEventListener(
     "mousemove",
@@ -926,21 +668,17 @@ function addMiniIcon(el, t) {
       )
   );
 
-
   s.addEventListener(
     "mouseleave",
     hideTip
   );
 
-
   el.appendChild(s);
 }
 
-
 function renderMiniGroup(el, list) {
 
-  clearMini(el);
-
+  el.innerHTML = "";
 
   if (!list.length) {
 
@@ -964,12 +702,10 @@ function renderMiniGroup(el, list) {
     return;
   }
 
-
   for (const t of list) {
     addMiniIcon(el, t);
   }
 }
-
 
 /* =========================================================
    REPORTE DEFENSIVO
@@ -991,24 +727,20 @@ function renderDefenseReport() {
     return;
   }
 
-
   const name =
     esName[def1] +
     (def2
       ? " / " + esName[def2]
       : "");
 
-
   defHint.textContent =
     `Defensa de ${name}:`;
-
 
   const g4 = [];
   const g2 = [];
   const g05 = [];
   const g025 = [];
   const g0 = [];
-
 
   for (const atk of types) {
 
@@ -1018,7 +750,6 @@ function renderDefenseReport() {
         def1,
         def2
       );
-
 
     if (m === null) {
       continue;
@@ -1045,14 +776,12 @@ function renderDefenseReport() {
     }
   }
 
-
   renderMiniGroup(def_x4, g4);
   renderMiniGroup(def_x2, g2);
   renderMiniGroup(def_x05, g05);
   renderMiniGroup(def_x025, g025);
   renderMiniGroup(def_x0, g0);
 }
-
 
 /* =========================================================
    RENDER CALCULADORA
@@ -1078,7 +807,6 @@ function renderCalc() {
     "Def2"
   );
 
-
   const m =
     multDual(
       attacker,
@@ -1086,24 +814,20 @@ function renderCalc() {
       def2
     );
 
-
   const left =
     attacker
       ? esName[attacker]
       : "Ø";
-
 
   const right =
     def1
       ? esName[def1]
       : "Ø";
 
-
   const right2 =
     def2
       ? " / " + esName[def2]
       : "";
-
 
   if (m === null) {
 
@@ -1118,31 +842,25 @@ function renderCalc() {
     return;
   }
 
-
   const m1 =
     mult(
       attacker,
       def1
     );
 
-
   const explain =
     def2
       ? `${fmt(m1)}·${fmt(mult(attacker, def2))}`
       : `${fmt(m1)}`;
 
-
   calcText.textContent =
     `${left} → ${right}${right2} (${explain})`;
-
 
   calcMult.textContent =
     fmt(m);
 
-
   renderDefenseReport();
 }
-
 
 /* =========================================================
    ASIGNAR TIPO
@@ -1162,10 +880,8 @@ function assignType(t) {
     def2 = t;
   }
 
-
   renderCalc();
 }
-
 
 /* =========================================================
    PALETA
@@ -1175,7 +891,6 @@ function buildPalette() {
 
   palette.innerHTML = "";
 
-
   /* Botón Ø */
 
   const noneBtn =
@@ -1184,16 +899,15 @@ function buildPalette() {
   noneBtn.className = "pBtn";
 
   noneBtn.type = "button";
+  noneBtn.setAttribute("aria-label", "Ninguno");
 
   noneBtn.innerHTML =
     `<div class="noneMark" style="transform:scale(.85)">Ø</div>`;
-
 
   noneBtn.addEventListener(
     "click",
     () => assignType("")
   );
-
 
   noneBtn.addEventListener(
     "mousemove",
@@ -1204,15 +918,12 @@ function buildPalette() {
       )
   );
 
-
   noneBtn.addEventListener(
     "mouseleave",
     hideTip
   );
 
-
   palette.appendChild(noneBtn);
-
 
   /* Tipos */
 
@@ -1224,7 +935,7 @@ function buildPalette() {
     b.className = "pBtn";
 
     b.type = "button";
-
+    b.title = esName[t];
 
     const img =
       document.createElement("img");
@@ -1235,22 +946,18 @@ function buildPalette() {
     img.src =
       iconUrl(t);
 
-
     img.onerror = () => {
 
       b.innerHTML =
         `<div class="fallback">${esName[t]}</div>`;
     };
 
-
     b.appendChild(img);
-
 
     b.addEventListener(
       "click",
       () => assignType(t)
     );
-
 
     b.addEventListener(
       "mousemove",
@@ -1261,39 +968,45 @@ function buildPalette() {
         )
     );
 
-
     b.addEventListener(
       "mouseleave",
       hideTip
     );
 
-
     palette.appendChild(b);
   }
 }
 
-
 /* =========================================================
    EVENTOS CALCULADORA
    ========================================================= */
+
+[[slotAtt, "att"], [slotDef1, "d1"], [slotDef2, "d2"]].forEach(([el, key]) => {
+  el.tabIndex = 0;
+  el.setAttribute("role", "button");
+  el.setAttribute("aria-label", el.title);
+  el.addEventListener("keydown", (e) => {
+    if (e.key === "Enter" || e.key === " ") {
+      e.preventDefault();
+      setActive(key);
+    }
+  });
+});
 
 slotAtt.addEventListener(
   "click",
   () => setActive("att")
 );
 
-
 slotDef1.addEventListener(
   "click",
   () => setActive("d1")
 );
 
-
 slotDef2.addEventListener(
   "click",
   () => setActive("d2")
 );
-
 
 document
   .getElementById("btnSwap")
@@ -1315,7 +1028,6 @@ document
     renderCalc();
   });
 
-
 document
   .getElementById("btnResetAll")
   .addEventListener("click", () => {
@@ -1329,14 +1041,12 @@ document
     renderCalc();
   });
 
-
 /* =========================================================
    TEMA
    ========================================================= */
 
 const btnTheme =
   document.getElementById("btnThemeTop");
-
 
 function applyTheme(theme) {
 
@@ -1360,13 +1070,11 @@ function applyTheme(theme) {
       "Claro";
   }
 
-
   localStorage.setItem(
     "pk_theme",
     theme
   );
 }
-
 
 function getTheme() {
 
@@ -1375,7 +1083,6 @@ function getTheme() {
     "dark"
   );
 }
-
 
 btnTheme.addEventListener(
   "click",
@@ -1388,7 +1095,6 @@ btnTheme.addEventListener(
         ? "light"
         : "dark";
 
-
     applyTheme(
       current === "light"
         ? "dark"
@@ -1397,13 +1103,11 @@ btnTheme.addEventListener(
   }
 );
 
-
 /* Tema inicial */
 
 applyTheme(
   getTheme()
 );
-
 
 /* =========================================================
    ATAJOS DE TECLADO
@@ -1421,7 +1125,6 @@ window.addEventListener(
     ) {
       return;
     }
-
 
     switch (e.key) {
 
@@ -1458,7 +1161,6 @@ window.addEventListener(
   }
 );
 
-
 /* =========================================================
    POKÉMONDB
    ========================================================= */
@@ -1494,7 +1196,6 @@ function toPokeDbSlug(raw) {
     );
 }
 
-
 function goPokeDb() {
 
   const input =
@@ -1502,23 +1203,18 @@ function goPokeDb() {
       "pokeSearchInput"
     );
 
-
   const q =
     input.value;
 
-
   const slug =
     toPokeDbSlug(q);
-
 
   if (!slug) {
     return;
   }
 
-
   const url =
     `https://pokemondb.net/pokedex/${slug}`;
-
 
   window.open(
     url,
@@ -1526,12 +1222,10 @@ function goPokeDb() {
     "noopener,noreferrer"
   );
 
-
   input.value = "";
 
   input.blur();
 }
-
 
 document
   .getElementById("pokeSearchBtn")
@@ -1539,7 +1233,6 @@ document
     "click",
     goPokeDb
   );
-
 
 document
   .getElementById("pokeSearchInput")
@@ -1553,7 +1246,6 @@ document
     }
   );
 
-
 /* =========================================================
    INICIALIZACIÓN
    ========================================================= */
@@ -1563,22 +1255,13 @@ buildTable(
   left9
 );
 
-
 buildTable(
   "tbodyB",
   right9
 );
 
-
 buildPalette();
 
-
 setActive("att");
-
-
-attacker = "";
-def1 = "";
-def2 = "";
-
 
 renderCalc();

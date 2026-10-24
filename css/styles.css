@@ -1,1271 +1,514 @@
 :root {
-  /* ===== Tema: OSCURO por defecto ===== */
-
-  --bg: #0b1220;
-  --card: #0f172a;
-  --border: rgba(255,255,255,.10);
-  --muted: rgba(255,255,255,.70);
-  --text: #e5e7eb;
-  --header: rgba(255,255,255,.06);
-  --shadow: 0 10px 25px rgba(0,0,0,.35);
-
-  --rowAlt: rgba(255,255,255,.03);
-  --chip: rgba(255,255,255,.06);
-  --chipBorder: rgba(255,255,255,.14);
-  --soft: rgba(255,255,255,.04);
-  --focus: #ffffff;
-
-  --badge-bg: #ffffff;
-  --badge-fg: #0b1220;
-  --badge-ring: rgba(0,0,0,.65);
-
-
-  /* ===== Tabla ===== */
-
-  --rowH: 90px;
-  --cellPad: 12px;
-  --orb: 88px;
-  --slot: 34px;
-  --center: 40px;
-  --th: 12px;
-
-
-  /* ===== Calculadora ===== */
-
-  --calcW: 250px;
-  --slotBtn: 56px;
-  --slotImg: 40px;
-  --palBtn: 38px;
-  --palImg: 28px;
-
-
-  /* ===== Calculadora defensiva ===== */
-
-  --miniSlot: 30px;
-  --miniImg: 22px;
+  color-scheme: dark;
+  --bg: #0b1120;
+  --card: #121c2e;
+  --text: #e7edf6;
+  --muted: #a2b1c8;
+  --border: #29374d;
+  --soft: #1e2b40;
+  --chip: #1b2940;
+  --chipBorder: #35455e;
+  --focus: #68dbc3;
 }
-
 
 body[data-theme="light"] {
-
-  --bg: #f6f7fb;
-  --card: #ffffff;
-  --border: #dbe1ee;
-  --muted: #6b7280;
-  --text: #111827;
-  --header: #eef2f7;
-  --shadow: 0 10px 25px rgba(0,0,0,.06);
-
-  --focus: #111827;
-
-  --badge-bg: #ffffff;
-  --badge-fg: #111827;
-  --badge-ring: rgba(0,0,0,.25);
-
-  --rowAlt: #fbfcff;
-  --chip: #ffffff;
-  --chipBorder: rgba(0,0,0,.12);
-  --soft: rgba(0,0,0,.04);
+  color-scheme: light;
+  --bg: #f0f4f8;
+  --card: #fff;
+  --text: #18283f;
+  --muted: #52647b;
+  --border: #d4dfea;
+  --soft: #e7edf4;
+  --chip: #f1f5f9;
+  --chipBorder: #cedae8;
+  --focus: #087a68;
 }
-
-
-/* =========================================================
-   BASE
-   ========================================================= */
 
 * {
   box-sizing: border-box;
 }
 
-
 body {
   margin: 0;
-  font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
   background: var(--bg);
   color: var(--text);
-  min-height: 100vh;
-  overflow-x: hidden;
-  overflow-y: auto;
+  font: 14px/1.5 system-ui,-apple-system,Segoe UI,sans-serif;
 }
 
+button,input {
+  font: inherit;
+}
 
-/* =========================================================
-   APP
-   ========================================================= */
+button {
+  cursor: pointer;
+}
+
+button:focus-visible,input:focus-visible,[role=button]:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: 3px;
+}
+
+.pageHeader {
+  max-width: 1920px;
+  margin: auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 10px 14px;
+  height: 54px;
+}
+
+h1 {
+  margin: 0;
+  font-size: 19px;
+  letter-spacing: -.4px;
+}
+
+.themeToggle,.btnSmall,.pokeSearch button {
+  border: 1px solid var(--chipBorder);
+  background: var(--chip);
+  color: var(--text);
+  border-radius: 9px;
+  padding: 8px 12px;
+  font-size: 12px;
+  font-weight: 650;
+}
+
+.themeToggle {
+  white-space: nowrap;
+}
 
 .app {
-  min-height: 100vh;
-  height: auto;
-  padding: 10px;
-
+  max-width: 1920px;
+  margin: auto;
   display: grid;
-  grid-template-columns: 1fr var(--calcW);
+  align-items: start;
+  padding: 0 12px 12px;
+  gap: 12px;
+  grid-template-columns: minmax(0, 1fr) 248px;
+}
 
+.reference,.panel,.tableBox {
+  min-width: 0;
+}
+
+.leftGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 10px;
 }
 
-
-.panel {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 16px;
-  box-shadow: var(--shadow);
-
-  overflow: hidden;
-
-  display: flex;
-  flex-direction: column;
-
-  min-height: 0;
-}
-
-
-/* =========================================================
-   TABLAS IZQUIERDA
-   ========================================================= */
-
 .tableBox {
-  border: 1px solid var(--soft);
-  border-radius: 14px;
-
+  border: 1px solid var(--border);
+  border-radius: 12px;
   background: var(--card);
-
-  overflow: hidden;
-
-  display: flex;
-  flex-direction: column;
-
-  min-height: 0;
 }
 
-
-.tableWrap {
-  position: relative;
-
-  overflow: visible;
+.thead,.row {
+  display: grid;
+  grid-template-columns: minmax(0, 1.8fr) minmax(0, 1fr) minmax(40px, .8fr) minmax(0, 1fr) minmax(0, 1.4fr) minmax(0, .5fr);
 }
-
-
-.tableScale {
-  transform-origin: top left;
-  width: 100%;
-}
-
 
 .thead {
-  display: grid;
-
-  grid-template-columns:
-    minmax(0, 1.1fr)
-    minmax(0, 1.1fr)
-    minmax(0, 0.9fr)
-    minmax(0, 1.1fr)
-    minmax(0, 1.1fr)
-    minmax(0, 0.9fr);
-
-  background: var(--header);
-
-  border-bottom: 1px solid var(--soft);
+  background: var(--soft);
+  border-radius: 12px 12px 0 0;
 }
-
 
 .th {
-  padding: 8px 4px;
-
-  font-weight: 900;
-  font-size: var(--th);
-
+  font-weight: 700;
   text-align: center;
-
-  border-right: 1px solid var(--soft);
+  color: var(--muted);
+  padding: 8px 2px;
+  font-size: 9px;
 }
-
-
-.th:last-child {
-  border-right: 0;
-}
-
-
-.tbody {
-  display: flex;
-  flex-direction: column;
-}
-
 
 .row {
-  display: grid;
-
-  grid-template-columns:
-    minmax(0, 1.1fr)
-    minmax(0, 1.1fr)
-    minmax(0, 0.9fr)
-    minmax(0, 1.1fr)
-    minmax(0, 1.1fr)
-    minmax(0, 0.9fr);
-
-  min-height: var(--rowH);
-
-  align-items: center;
-
-  border-bottom: 1px solid var(--soft);
-
-  background: var(--card);
+  border-top: 1px solid var(--border);
+  min-height: max(52px, calc((100dvh - 100px) / 9));
 }
 
+.row:nth-child(even) {
+  background: color-mix(in srgb,var(--soft) 30%,transparent);
+}
 
-.row:nth-child(odd) {
-  background: var(--rowAlt);
+.row:last-child {
+  border-radius: 0 0 12px 12px;
 }
 
 .cell {
-  padding: var(--cellPad);
-  border-right: 1px solid var(--soft);
+  min-width: 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  position: relative;
-  min-width: 0;
-  width: 100%;
-  height: 100%;
-  overflow: hidden; /* Garantiza que nada se salga fuera */
-}
-
-/*
-.cell {
-  padding: var(--cellPad);
-
   border-right: 1px solid var(--soft);
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  position: relative;
-  min-width: 0;
+  padding: 5px 3px;
 }
-*/
 
 .cell:last-child {
-  border-right: 0;
+  border: 0;
 }
 
-
-/* =========================================================
-   ICONO CENTRAL
-   ========================================================= */
-
-.centerIcon {
-  width: calc(var(--center) + 12px);
-  height: calc(var(--center) + 12px);
-
-  border-radius: 12px;
-
-  border: 1px solid var(--chipBorder);
-
-  background: var(--chip);
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  overflow: hidden;
-
-  box-shadow: 0 4px 10px rgba(0,0,0,.20);
+.cell:nth-child(3) {
+  background: color-mix(in srgb,var(--soft) 50%,transparent);
 }
 
-
-.centerIcon img {
-  width: var(--center);
-  height: var(--center);
-
-  object-fit: contain;
-}
-
-
-/* =========================================================
-   ÓRBITAS
-   ========================================================= */
-/*
-.orbital {
-  width: var(--orb);
-  height: var(--orb);
-
-  position: relative;
-}
-*/
-
-.orbital {
-  width: var(--orb);
-  height: var(--orb);
-  position: relative;
-  margin: 0 auto;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-}
-
-.orbital.orbital-grid {
+.typeGroup {
   display: flex;
   flex-wrap: wrap;
-  align-content: center;
   justify-content: center;
-  gap: 3px;
+  align-items: center;
   width: 100%;
-  height: 100%;
-  padding: 2px;
-}
-
-.orbital.grid-dense .slot {
-  width: calc(var(--slot) - 4px); /* 30px en escritorio */
-  height: calc(var(--slot) - 4px);
-}
-
-.orbital.grid-dense .slot img {
-  width: calc(var(--slot) - 6px);
-  height: calc(var(--slot) - 6px);
+  min-width: 0;
+  gap: 3px;
 }
 
 .slot {
-  width: var(--slot);
-  height: var(--slot);
-  border-radius: 8px;
+  flex: 0 0 27px;
+  position: relative;
+  display: grid;
+  place-items: center;
   background: var(--chip);
   border: 1px solid var(--chipBorder);
-  box-shadow: 0 2px 5px rgba(0,0,0,.20);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: relative;
-  overflow: visible;
-  flex-shrink: 0;
-  transition: transform 0.15s ease, border-color 0.15s ease;
-}
-
-.slot.is-immune {
-  border: 2px solid #ef4444; /* Borde rojo vivo */
-  box-shadow: 0 0 6px rgba(239, 68, 68, 0.6); /* Glow sutil */
-}
-
-.orbital:not(.orbital-grid) .slot {
-  position: absolute;
-  transform: translate(-50%, -50%);
+  --size: clamp(12px, min(1.55vw, 2.9vh), 26px);
+  width: var(--size);
+  height: var(--size);
+  flex-basis: var(--size);
+  border-radius: 4px;
 }
 
 .slot img {
-  width: calc(var(--slot) - 2px);
-  height: calc(var(--slot) - 2px);
   object-fit: contain;
-  border-radius: 6px;
+  width: calc(var(--size) - 3px);
+  height: calc(var(--size) - 3px);
 }
 
-
-/* =========================================================
-   BADGE DE INMUNIDAD
-   ========================================================= */
+.slot.is-immune {
+  border-color: #ee8b9b;
+}
 
 .badge {
   position: absolute;
-  top: -6px;
-  right: -6px;
-  width: 12px;
-  height: 12px;
+  border: 1px solid var(--card);
   border-radius: 50%;
-  background: #ef4444;
-  color: #ffffff;
-  border: 1.5px solid #ffffff;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 8px;
-  font-weight: 1000;
-  line-height: 1;
-  z-index: 10;
-  pointer-events: none;
+  background: #b33649;
+  color: white;
+  text-align: center;
+  width: 10px;
+  line-height: 9px;
+  font-size: 7px;
+  right: -3px;
+  top: -3px;
 }
-
-
-body:not([data-theme="light"]) .badge {
-  box-shadow:
-    0 0 0 2px var(--badge-ring),
-    0 0 10px rgba(255,255,255,.28);
-}
-
-
-/* =========================================================
-   VACÍO
-   ========================================================= */
 
 .empty {
   color: var(--muted);
-
   font-size: 12px;
-
-  opacity: .9;
-
-  text-align: center;
-
-  padding: 10px 6px;
-
-  border: 1px dashed var(--chipBorder);
-
-  border-radius: 14px;
-
-  background: var(--chip);
 }
 
+.centerIcon {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
 
-/* =========================================================
-   CALCULADORA
-   ========================================================= */
+.centerIcon img {
+  object-fit: contain;
+  width: clamp(22px, 3.8vh, 32px);
+  height: clamp(22px, 3.8vh, 32px);
+}
+
+.typeName {
+  font-weight: 700;
+  font-size: 9px;
+}
+
+.app>.panel {
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: var(--card);
+  position: static;
+}
 
 .calc {
-  flex: 1 1 auto;
-  min-height: 0;
-
-  overflow: hidden;
-
   display: flex;
   flex-direction: column;
-
-  gap: 10px;
-
   padding: 10px;
-
-  background:
-    linear-gradient(
-      180deg,
-      rgba(255,255,255,.03),
-      rgba(255,255,255,.00)
-    );
-}
-
-
-.calcCard {
-  border: 1px solid var(--border);
-
-  border-radius: 16px;
-
-  padding: 8px;
-
-  background: var(--card);
-
-  box-shadow: var(--shadow);
-
-  min-height: 0;
-
-  overflow: hidden;
-
-  display: flex;
-  flex-direction: column;
-}
-
-
-.calcCard.atkCard {
-  flex: 0 0 auto;
-}
-
-
-.calcCard.defCard {
-  flex: 1 1 auto;
-}
-
-
-.calcTitle {
-  display: flex;
-
-  align-items: baseline;
-  justify-content: space-between;
-
-  gap: 10px;
-
-  margin-bottom: 8px;
-
-  flex: 0 0 auto;
-}
-
-
-.calcTitle h2 {
-  margin: 0;
-
-  font-size: 13px;
-
-  font-weight: 1000;
-
-  letter-spacing: .2px;
-}
-
-
-.miniNote {
-  font-size: 12px;
-
-  color: var(--muted);
-
-  font-weight: 800;
-
-  white-space: nowrap;
-
-  margin-right: 65px;
-}
-
-
-/* =========================================================
-   SLOTS DE CALCULADORA
-   ========================================================= */
-
-.targetRow {
-  display: flex;
-
-  gap: 8px;
-
-  justify-content: space-between;
-
-  flex: 0 0 auto;
-}
-
-
-.tSlot {
-  width: 100%;
-  height: var(--slotBtn);
-
-  border-radius: 16px;
-
-  border: 1px solid var(--chipBorder);
-
-  background: var(--chip);
-
-  color: var(--text);
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  cursor: pointer;
-
-  position: relative;
-
-  overflow: hidden;
-
-  transition:
-    transform .06s ease,
-    box-shadow .06s ease;
-}
-
-
-.tSlot:hover {
-  transform: translateY(-1px);
-
-  box-shadow: 0 8px 14px rgba(0,0,0,.06);
-}
-
-
-.tSlot.active {
-  outline: 3px solid var(--focus);
-  outline-offset: 0;
-}
-
-
-.tSlot img {
-  width: var(--slotImg);
-  height: var(--slotImg);
-
-  object-fit: contain;
-}
-
-
-.tSlot .tiny {
-  position: absolute;
-
-  left: 10px;
-  top: 7px;
-
-  font-size: 11px;
-
-  font-weight: 1000;
-
-  color: var(--text);
-
-  text-shadow: 0 1px 2px rgba(0,0,0,.6);
-
-  padding: 2px 6px;
-
-  border-radius: 999px;
-
-  background: rgba(0,0,0,.25);
-
-  border: 1px solid rgba(255,255,255,.12);
-}
-
-
-.tSlot .fallback {
-  font-size: 12px;
-
-  font-weight: 1000;
-
-  color: var(--text);
-
-  padding: 0 6px;
-
-  text-align: center;
-
-  line-height: 1.1;
-}
-
-
-/* =========================================================
-   NINGUNO
-   ========================================================= */
-
-.noneMark {
-  width: 38px;
-  height: 38px;
-
-  border-radius: 999px;
-
-  border: 2px dashed rgba(17,24,39,.35);
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  font-weight: 1000;
-
-  color: rgba(17,24,39,.8);
-
-  font-size: 16px;
-
-  background: rgba(249,250,251,.9);
-}
-
-
-/* =========================================================
-   BOTONES
-   ========================================================= */
-
-.rowBtns {
-  display: flex;
-
-  gap: 6px;
-
-  flex-wrap: wrap;
-
-  margin-top: 10px;
-
-  flex: 0 0 auto;
-}
-
-
-.btnSmall {
-  height: 30px;
-
-  padding: 0 10px;
-
-  border-radius: 999px;
-
-  border: 1px solid var(--chipBorder);
-
-  background: var(--chip);
-
-  color: var(--text);
-
-  cursor: pointer;
-
-  font-weight: 1000;
-
-  font-size: 12px;
-}
-
-
-.btnSmall:hover {
-  filter: brightness(1.06);
-  background: #f8fafc;
-}
-
-
-/* =========================================================
-   RESULTADO
-   ========================================================= */
-
-.out {
-  margin-top: 10px;
-
-  display: flex;
-
-  align-items: center;
-  justify-content: space-between;
-
-  gap: 10px;
-
-  padding: 10px;
-
-  border-radius: 16px;
-
-  border: 1px solid var(--chipBorder);
-
-  background:
-    linear-gradient(
-      180deg,
-      rgba(255,255,255,.04),
-      rgba(255,255,255,.02)
-    );
-
-  flex: 0 0 auto;
-}
-
-
-.desc {
-  font-size: 12px;
-
-  color: var(--muted);
-
-  font-weight: 900;
-
-  line-height: 1.15;
-}
-
-
-.mult {
-  font-weight: 1000;
-
-  font-size: 14px;
-
-  padding: 6px 10px;
-
-  border-radius: 999px;
-
-  border: 2px solid var(--text);
-
-  background: var(--chip);
-
-  color: var(--text);
-
-  white-space: nowrap;
-}
-
-
-/* =========================================================
-   PALETA
-   ========================================================= */
-
-.palette {
-  display: grid;
-
-  grid-template-columns: repeat(6, 1fr);
-
-  gap: 4px;
-
-  margin-top: 5px;
-
-  flex: 1 1 auto;
-
-  min-height: 0;
-
-  overflow: hidden;
-}
-
-
-.pBtn {
-  height: var(--palBtn);
-
-  border-radius: 12px;
-
-  border: 1px solid var(--chipBorder);
-
-  background: var(--chip);
-
-  cursor: pointer;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  overflow: hidden;
-
-  padding: 0;
-
-  transition:
-    transform .06s ease,
-    box-shadow .06s ease;
-}
-
-
-.pBtn:hover {
-  filter: brightness(1.06);
-
-  transform: translateY(-1px);
-
-  box-shadow: 0 8px 14px rgba(0,0,0,.05);
-
-  background: #fcfdff;
-}
-
-
-.pBtn img {
-  width: var(--palImg);
-  height: var(--palImg);
-
-  object-fit: contain;
-}
-
-
-.pBtn .fallback {
-  font-size: 10px;
-
-  font-weight: 1000;
-
-  color: var(--text);
-
-  padding: 0 4px;
-
-  text-align: center;
-
-  line-height: 1.05;
-}
-
-
-/* =========================================================
-   CALCULADORA DEFENSIVA
-   ========================================================= */
-
-.defHint {
-  font-size: 12px;
-
-  color: var(--muted);
-
-  font-weight: 900;
-
-  line-height: 1.2;
-
-  padding: 8px 10px;
-
-  border-radius: 14px;
-
-  border: 1px solid var(--chipBorder);
-
-  background:
-    linear-gradient(
-      180deg,
-      rgba(255,255,255,.04),
-      rgba(255,255,255,.02)
-    );
-
-  margin-bottom: 8px;
-
-  flex: 0 0 auto;
-}
-
-
-.defRows {
-  display: flex;
-
-  flex-direction: column;
-
-  gap: 8px;
-
-  flex: 1 1 auto;
-
-  min-height: 0;
-
-  overflow: hidden;
-}
-
-
-.defRow {
-  display: grid;
-
-  grid-template-columns: 52px 1fr;
-
-  gap: 8px;
-
-  align-items: center;
-
-  padding: 8px 10px;
-
-  border-radius: 14px;
-
-  border: 1px solid var(--border);
-
-  background: var(--card);
-
-  box-shadow: var(--shadow);
-
-  min-height: 0;
-}
-
-
-.mPill {
-  height: 28px;
-
-  border-radius: 999px;
-
-  border: 2px solid var(--text);
-
-  background: var(--chip);
-
-  color: var(--text);
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  font-weight: 1000;
-
-  font-size: 12px;
-}
-
-
-.miniIcons {
-  display: grid;
-
-  grid-template-columns: repeat(4, var(--miniSlot));
-
-  gap: 2px;
-
-  align-items: center;
-
-  justify-content: flex-start;
-
-  min-height: 0;
-
-  overflow: hidden;
-}
-
-
-.miniSlot {
-  width: var(--miniSlot);
-  height: var(--miniSlot);
-
-  border-radius: 10px;
-
-  background: var(--chip);
-
-  border: 1px solid var(--chipBorder);
-
-  box-shadow: 0 3px 8px rgba(0,0,0,.18);
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  overflow: hidden;
-
-  flex: 0 0 auto;
-}
-
-
-.miniSlot img {
-  width: var(--miniImg);
-  height: var(--miniImg);
-
-  object-fit: contain;
-}
-
-
-/* =========================================================
-   TOOLTIP
-   ========================================================= */
-
-.tip {
-  position: fixed;
-
-  z-index: 9999;
-
-  padding: 8px 10px;
-
-  font-size: 12px;
-
-  color: var(--text);
-
-  background:
-    color-mix(
-      in srgb,
-      var(--card) 92%,
-      transparent
-    );
-
-  border: 1px solid var(--border);
-
-  border-radius: 12px;
-
-  pointer-events: none;
-
-  box-shadow: var(--shadow);
-
-  backdrop-filter: blur(6px);
-
-  display: none;
-
-  max-width: 260px;
-}
-
-
-/* =========================================================
-   BÚSQUEDA POKÉMONDB
-   ========================================================= */
-
-.pokeSearch {
-  margin-top: 10px;
-
-  display: flex;
-
-  gap: 8px;
-
-  align-items: center;
-
-  padding: 10px;
-
-  border-radius: 16px;
-
-  border: 1px solid var(--border);
-
-  background: var(--card);
-
-  box-shadow: var(--shadow);
-}
-
-
-.pokeSearch input {
-  flex: 1;
-
-  min-width: 0;
-
-  height: 34px;
-
-  border-radius: 12px;
-
-  border: 1px solid var(--chipBorder);
-
-  background: var(--chip);
-
-  color: var(--text);
-
-  padding: 0 10px;
-
-  font-weight: 800;
-
-  outline: none;
-
-  font-size: 13px;
-}
-
-
-.pokeSearch input::placeholder {
-  color: var(--muted);
-}
-
-
-.pokeSearch input:focus {
-  border-color: rgba(17,24,39,.55);
-}
-
-
-.pokeSearch button {
-  height: 36px;
-
-  padding: 0 14px;
-
-  border-radius: 12px;
-
-  border: 2px solid var(--text);
-
-  background: var(--chip);
-
-  color: var(--text);
-
-  font-weight: 1000;
-
-  cursor: pointer;
-}
-
-
-.pokeSearch button:hover {
-  filter: brightness(1.06);
-  background: #f8fafc;
-}
-
-
-/* =========================================================
-   CAMBIO DE TEMA
-   ========================================================= */
-
-.themeToggle {
-  position: fixed;
-
-  top: 10px;
-  right: 10px;
-
-  z-index: 10000;
-
-  height: 34px;
-
-  padding: 0 12px;
-
-  border-radius: 12px;
-
-  border: 1px solid var(--border);
-
-  background: var(--card);
-
-  color: var(--text);
-
-  font-weight: 1000;
-
-  cursor: pointer;
-
-  box-shadow: var(--shadow);
-}
-
-
-.themeToggle:hover {
-  filter: brightness(1.05);
-}
-
-/* Contenedor principal que envuelve a ambas tablas */
-.tables-wrapper, 
-.tables-container { /* Usa la clase de tu contenedor principal de tablas */
-  display: flex;
-  flex-direction: row;
-  align-items: stretch; /* Obliga a ambas columnas a tener la misma altura */
-  gap: 20px;
-  width: 100%;
-}
-
-/* Cada una de las dos tablas/columnas */
-.table-card, 
-.calculator-section {
-  flex: 1; /* Ocupan exactamente el 50% cada una */
-  display: flex;
-  flex-direction: column;
-  min-width: 0; /* Previene desbordamientos flex */
-}
-
-/* =========================================================
-   RESPONSIVE Y ALTURAS DE TABLAS
-   ========================================================= */
-
-/* 1. Regla global para que en escritorio las tablas tengan SIEMPRE la misma altura */
-.leftGrid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  align-items: stretch; /* Estira las dos tablas para que sean idénticas */
   gap: 12px;
 }
 
-.leftGrid .panel {
+.calcCard {
+  min-width: 0;
+}
+
+.calcTitle {
   display: flex;
-  flex-direction: column;
-  height: 100%;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 8px;
+  margin-bottom: 8px;
 }
 
-/* 2. Monitor Grande (> 1400px): Todo holgado y órbitas anchas sin solapamiento */
-@media (min-width: 1401px) {
-  :root {
-    --rowH: 88px;
-    --orb: 115px;   /* Órbita más grande para dar separación entre slots */
-    --center: 32px;
-    --slot: 36px;   /* Iconos grandes y legibles */
-  }
-
-  .app {
-    grid-template-columns: 1fr auto;
-  }
+.calcTitle h2 {
+  margin: 0;
+  font-size: 13px;
 }
 
-/* 3. La calculadora pasa abajo (Entre 1001px y 1400px):
-   Las dos tablas ocupan todo el ancho superior con iconos grandes */
-@media (max-width: 1400px) and (min-width: 1001px) {
-  :root {
-    --rowH: 84px;
-    --orb: 105px;
-    --center: 32px;
-    --slot: 36px;   /* Mantenemos iconos grandes porque las celdas se ensanchan */
-  }
-
-  .app {
-    grid-template-columns: 1fr; /* Calculadora pasa abajo */
-  }
-
-  .leftGrid {
-    grid-template-columns: 1fr 1fr; /* Las 2 tablas siguen en horizontal */
-  }
-
-  .calc {
-    width: 100%;
-  }
+.miniNote {
+  color: var(--muted);
+  font-size: 9px;
 }
 
-/* 4. Las 2 tablas se apilan una sobre otra (Entre 601px y 1000px):
-   1 sola columna -> Mucho espacio por celda -> Iconos MÁS GRANDES */
-@media (max-width: 1000px) {
-  .app {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    min-height: 100vh;
-    padding: 6px;
-    gap: 8px;
-  }
-
-  .leftGrid {
-    display: flex;
-    flex-direction: column; /* Tablas apiladas */
-    gap: 8px;
-  }
-
-  .panel {
-    width: 100%;
-  }
-
-  :root {
-    --rowH: 80px;
-    --orb: 100px;
-    --center: 30px;
-    --slot: 38px;   /* Iconos un pelín más grandes al tener mucho espacio */
-    --slotBtn: 52px;
-    --slotImg: 36px;
-    --palBtn: 36px;
-    --palImg: 26px;
-    --miniSlot: 28px;
-    --miniImg: 20px;
-  }
+.targetRow {
+  display: flex;
+  gap: 8px;
 }
 
-/* 5. Pantallas Móvil (< 600px):
-   Iconos MÁS PEQUEÑOS para que quepan todos sin desbordar */
-@media (max-width: 600px) {
-  :root {
-    --rowH: 56px;   /* Filas más finas */
-    --orb: 100%;
-    --center: 26px;
-    --slot: 21px;   /* Reducido para garantízate que quepan 8-10 tipos */
-    --cellPad: 2px;
+.tSlot {
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding: 23px 6px 8px;
+  min-width: 0;
+  flex: 1;
+  border-radius: 10px;
+  border: 1px solid var(--chipBorder);
+  background: var(--chip);
+  cursor: pointer;
+  height: 66px;
+  padding-top: 21px;
+}
 
-    --slotBtn: 44px;
-    --slotImg: 28px;
-    --palBtn: 32px;
-    --palImg: 22px;
-    --miniSlot: 24px;
-    --miniImg: 18px;
-  }
+.tSlot.active {
+  outline: 2px solid var(--focus);
+  outline-offset: 1px;
+}
 
-  .app {
-    padding: 4px;
-    gap: 6px;
-  }
+.tSlot img {
+  object-fit: contain;
+  width: 28px;
+  height: 28px;
+}
 
-  .panel {
-    padding: 8px;
-  }
+.tiny {
+  position: absolute;
+  top: 6px;
+  left: 8px;
+  font-size: 10px;
+  color: var(--muted);
+  font-weight: 700;
+}
 
-  .orbital.orbital-grid {
-    gap: 1.5px;    /* Espaciado ajustado para no romper filas */
-  }
+.noneMark {
+  font-size: 24px;
+  color: var(--muted);
+  line-height: 32px;
+}
 
-  .badge {
-    top: -4px;
-    right: -4px;
-    width: 9px;
-    height: 9px;
-    font-size: 7px;
-  }
+.rowBtns {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-top: 8px;
+}
+
+.btnSmall {
+  padding: 5px 7px;
+  font-size: 9px;
+}
+
+.out {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  background: var(--soft);
+  border-radius: 10px;
+  padding: 8px;
+  margin: 8px 0;
+}
+
+.desc {
+  font-size: 11px;
+  color: var(--muted);
+  overflow-wrap: anywhere;
+}
+
+.mult {
+  font-weight: 800;
+  color: var(--focus);
+  white-space: nowrap;
+  font-size: 20px;
+}
+
+.palette {
+  display: grid;
+  grid-template-columns: repeat(6,minmax(0,1fr));
+  gap: 5px;
+}
+
+.pBtn {
+  display: grid;
+  place-items: center;
+  padding: 3px;
+  border-radius: 8px;
+  border: 1px solid var(--chipBorder);
+  background: var(--chip);
+  color: var(--text);
+  height: 31px;
+}
+
+.pBtn img {
+  object-fit: contain;
+  width: 23px;
+  height: 23px;
+}
+
+button:hover {
+  border-color: var(--focus);
+}
+
+.defCard {
+  border-top: 1px solid var(--border);
+  padding-top: 10px;
+}
+
+.defHint {
+  font-size: 11px;
+  color: var(--muted);
+  margin-bottom: 8px;
+}
+
+.defRows {
+  display: grid;
+  gap: 6px;
+}
+
+.defRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--soft);
+  border-radius: 8px;
+  padding: 5px;
+  min-height: 33px;
+}
+
+.mPill {
+  font-size: 12px;
+  font-weight: 800;
+  min-width: 29px;
+}
+
+.defRow:nth-child(-n+2) .mPill {
+  color: #ee98a0;
+}
+
+.defRow:nth-child(n+3) .mPill {
+  color: var(--focus);
+}
+
+.miniIcons {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+  min-width: 0;
+}
+
+.miniSlot {
+  display: grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+}
+
+.miniSlot img {
+  object-fit: contain;
+  width: 21px;
+  height: 21px;
+}
+
+.pokeSearch {
+  display: flex;
+  gap: 6px;
+}
+
+.pokeSearch input {
+  width: 100%;
+  min-width: 0;
+  border: 1px solid var(--chipBorder);
+  border-radius: 8px;
+  padding: 9px;
+  font-size: 11px;
+  background: var(--chip);
+  color: var(--text);
+}
+
+.tip {
+  display: none;
+  position: fixed;
+  z-index: 10;
+  pointer-events: none;
+  transform: translate(-50%,12px);
+  max-width: min(260px,90vw);
+  padding: 8px 10px;
+  background: var(--text);
+  color: var(--bg);
+  font-size: 11px;
+  border-radius: 6px;
+}
+
+@media (max-width: 1150px) and (min-width: 701px) {
+  .app { grid-template-columns: minmax(0, 1fr) 220px; gap: 8px; padding-inline: 8px; }
+  .leftGrid { gap: 6px; }
+  .th { font-size: 8px; }
+  .cell { padding-inline: 2px; }
+  .typeGroup { gap: 2px; }
+  .typeName { font-size: 8px; }
+}
+/* En móvil mantenemos la información legible en fichas. */
+@media (max-width: 700px) {
+  .app { grid-template-columns: minmax(0, 1fr); }
+  .app > .panel { grid-row: 1; }
+  .calc { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .defCard { border-top: 0; border-left: 1px solid var(--border); padding: 0 0 0 10px; }
+  .pokeSearch { grid-column: 1 / -1; }
+  .leftGrid { grid-template-columns: minmax(0, 1fr); }
+  .thead { display: none; }
+  .tableBox { border: 0; background: none; }
+  .tbody { display: grid; gap: 10px; }
+  .row { grid-template-columns: repeat(2, minmax(0, 1fr)); border: 1px solid var(--border); border-radius: 10px; padding: 6px; background: var(--card); }
+  .row:last-child { border-radius: 10px; }
+  .cell { border: 0; flex-direction: column; align-items: flex-start; padding: 8px; gap: 6px; }
+  .cell::before { content: attr(data-label); color: var(--muted); font-size: 10px; }
+  .cell:nth-child(3) { grid-column: 1 / -1; grid-row: 1; border-radius: 6px; }
+  .cell:nth-child(3)::before { display: none; }
+  .centerIcon { flex-direction: row; gap: 8px; }
+  .typeName { font-size: 13px; }
+  .typeGroup { justify-content: flex-start; gap: 5px; }
+  .slot { --size: 28px; }
+  .cell:last-child { grid-column: 1 / -1; }
+}
+@media (max-width: 420px) {
+  .calc { display: flex; }
+  .defCard { border-left: 0; border-top: 1px solid var(--border); padding: 10px 0 0; }
+}
+/* Reducir también las herramientas en portátiles con poca altura. */
+@media (max-height: 740px) and (min-width: 701px) {
+  .calc { gap: 8px; padding: 8px; }
+  .calcTitle { margin-bottom: 5px; }
+  .tSlot { height: 55px; }
+  .rowBtns { margin-top: 6px; }
+  .out { margin: 6px 0; padding: 6px; }
+  .pBtn { height: 26px; }
+  .pBtn img { width: 21px; height: 21px; }
+  .palette { gap: 3px; }
+  .defCard { padding-top: 7px; }
+  .defRows { gap: 4px; }
+  .defRow { min-height: 27px; padding: 3px 5px; }
+  .defHint { margin-bottom: 5px; }
+  .miniSlot { width: 20px; height: 20px; }
+  .miniSlot img { width: 19px; height: 19px; }
 }
